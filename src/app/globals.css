@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+  }
+
+  body {
+    @apply bg-white text-gray-900 font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-islamic-emerald hover:bg-islamic-emerald-dark text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply bg-islamic-gold hover:bg-islamic-gold-dark text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-islamic-emerald focus:ring-2 focus:ring-islamic-emerald focus:ring-opacity-20 transition-all duration-200 outline-none;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-2xl;
+  }
+
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-islamic-emerald to-islamic-gold bg-clip-text text-transparent;
+  }
+
+  .bg-islamic-gradient {
+    @apply bg-gradient-to-br from-islamic-emerald via-islamic-emerald-dark to-islamic-emerald;
+  }
+
+  .shadow-islamic {
+    box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.3);
+  }
+}
