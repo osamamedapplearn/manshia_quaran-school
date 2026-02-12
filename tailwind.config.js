@@ -20,6 +20,19 @@ module.exports = {
                     dark: '#8F7244',
                 },
 
+                // Islamic theme colors (aliases for easier use)
+                'islamic-emerald': {
+                    DEFAULT: '#10B981',
+                    light: '#34D399',
+                    dark: '#059669',
+                },
+                'islamic-gold': {
+                    DEFAULT: '#C5A065',
+                    light: '#D8B985',
+                    dark: '#8F7244',
+                },
+                'islamic-green': '#10B981', // Alias for emerald
+
                 // 2. الخلفيات (Backgrounds)
                 background: {
                     DEFAULT: '#fdfbf7', // لون "الكريمي" الوقور للخلفية الأساسية

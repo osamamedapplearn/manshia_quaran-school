@@ -41,7 +41,7 @@ export default function GallerySection() {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-4xl font-bold text-primary mb-4 font-arabic">
+                    <h2 className="text-4xl font-bold text-islamic-emerald mb-4 font-arabic">
                         معرض الصور
                     </h2>
                     <p className="text-gray-600 text-lg">

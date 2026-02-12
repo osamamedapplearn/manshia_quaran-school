@@ -156,7 +156,7 @@ export default function RegistrationForm() {
                 className="text-center mb-16"
             >
                 <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-                    <span className="text-gradient">التسجيل</span>
+                    <span className="bg-gradient-to-r from-islamic-emerald via-emerald-600 to-islamic-emerald bg-clip-text text-transparent">التسجيل</span>
                     <span className="block text-3xl sm:text-4xl mt-2 text-gray-700">Registration</span>
                 </h2>
                 <p className="text-gray-600 text-lg max-w-2xl mx-auto">

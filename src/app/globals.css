@@ -26,15 +26,15 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-secondary hover:bg-secondary-dark text-white font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-gold hover:shadow-xl transform hover:-translate-y-0.5;
+    @apply bg-islamic-emerald hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 border-2 border-islamic-gold/30 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-600/40 transform hover:-translate-y-0.5;
   }
 
   .btn-secondary {
-    @apply bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:-translate-y-0.5;
+    @apply bg-transparent border-2 border-islamic-gold text-islamic-gold hover:bg-islamic-gold hover:text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:-translate-y-0.5;
   }
 
   .input-field {
-    @apply w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 outline-none bg-white;
+    @apply w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-islamic-emerald focus:ring-2 focus:ring-islamic-emerald/20 transition-all duration-200 outline-none bg-white;
   }
 
   .card {
@@ -70,30 +70,30 @@
 }
 
 .react-datepicker {
-  @apply border-2 border-primary/20 rounded-lg shadow-islamic;
+  @apply border-2 border-islamic-emerald/20 rounded-lg shadow-islamic;
   font-family: 'Cairo', 'Tajawal', sans-serif;
 }
 
 .react-datepicker__header {
-  @apply bg-primary/10 border-b border-primary/20 rounded-t-lg;
+  @apply bg-islamic-emerald/10 border-b border-islamic-emerald/20 rounded-t-lg;
 }
 
 .react-datepicker__current-month {
-  @apply text-primary font-bold;
+  @apply text-islamic-emerald font-bold;
 }
 
 .react-datepicker__day-name {
-  @apply text-primary/70 font-semibold;
+  @apply text-islamic-emerald/70 font-semibold;
 }
 
 .react-datepicker__day--selected {
-  @apply bg-secondary hover:bg-secondary-dark text-white;
+  @apply bg-islamic-emerald hover:bg-emerald-700 text-white;
 }
 
 .react-datepicker__day--keyboard-selected {
-  @apply bg-primary hover:bg-primary-dark text-white;
+  @apply bg-islamic-gold hover:bg-yellow-600 text-white;
 }
 
 .react-datepicker__day:hover {
-  @apply bg-primary/10;
+  @apply bg-islamic-emerald/10;
 }

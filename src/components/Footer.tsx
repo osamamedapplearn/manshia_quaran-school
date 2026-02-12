@@ -61,8 +61,11 @@ export default function Footer() {
 
                 <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
                     <p className="font-arabic">
-                        © 2024 مدرسة القرآن الكريم بمنشأة سلطان. جميع الحقوق محفوظة.
+                        مدرسة القرآن الكريم بمنشأة سلطان
+
+
                     </p>
+                    <p className="font-arabic">Made by O.A.M </p>
                 </div>
             </div>
         </footer>

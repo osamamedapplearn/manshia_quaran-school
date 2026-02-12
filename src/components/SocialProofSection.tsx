@@ -32,7 +32,7 @@ export default function SocialProofSection() {
                 className="text-center mb-16"
             >
                 <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                    <span className="text-primary">أحدث المنشورات</span>
+                    <span className="text-islamic-emerald">أحدث المنشورات</span>
                 </h2>
                 <div className="w-24 h-1.5 bg-secondary mx-auto rounded-full opacity-80" />
             </motion.div>
@@ -66,7 +66,7 @@ export default function SocialProofSection() {
                                 <div className="flex items-center justify-end gap-2 text-sm text-gray-500">
                                     <span>{post.date}</span>
                                     <span>•</span>
-                                    <span className="text-primary font-medium">{post.authorEn}</span>
+                                    <span className="text-islamic-emerald font-medium">{post.authorEn}</span>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +110,7 @@ export default function SocialProofSection() {
                                 </button>
 
                                 <button className="flex items-center gap-2 hover:bg-gray-50 px-6 py-3 rounded-xl transition-all duration-300 group active:scale-95">
-                                    <ThumbsUp className="w-7 h-7 group-hover:text-primary transition-colors" />
+                                    <ThumbsUp className="w-7 h-7 group-hover:text-islamic-emerald transition-colors" />
                                     <span className="font-bold text-lg">{post.likes}</span>
                                 </button>
                             </div>

@@ -75,12 +75,12 @@ export default function HeroSection() {
                         transition={{ delay: 0.8 }}
                         className="flex flex-col sm:flex-row items-center justify-center gap-4"
                     >
-                        {/* Primary Button - Gold Background */}
+                        {/* Primary Button - Green Background with Gold Accent */}
                         <motion.a
                             href="/register" // تأكد من رابط صفحة التسجيل
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className="inline-flex items-center gap-3 px-8 py-4 bg-secondary hover:bg-[#b08d55] text-white font-bold text-lg rounded-full transition-all duration-300 shadow-lg hover:shadow-xl font-arabic"
+                            className="inline-flex items-center gap-3 px-8 py-4 bg-islamic-emerald hover:bg-emerald-700 text-white font-bold text-lg rounded-full transition-all duration-300 border-2 border-islamic-gold/30 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-600/40 font-arabic"
                         >
                             <BookOpen className="w-6 h-6" />
                             <span>سجل الآن</span>

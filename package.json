@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "npx kill-port 8080 || true && next start -p 8080",
     "lint": "next lint"
   },
   "dependencies": {
