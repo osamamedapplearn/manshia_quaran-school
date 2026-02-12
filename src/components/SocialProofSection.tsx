@@ -2,136 +2,117 @@
 
 import { motion } from 'framer-motion'
 import { ThumbsUp, MessageCircle, Share2 } from 'lucide-react'
+import image from 'next/image'
+// 1. تأكدنا من استيراد مكون الصور من Next.js وحذفنا ImageIcon اللي مش محتاجينه
 import Image from 'next/image'
 
 const facebookPosts = [
     {
         id: 1,
-        author: 'مدرسة القرآن الكريم',
+        // 2. تحديث البيانات لتكون أكثر واقعية
+        author: 'مدرسة القرآن الكريم بمنشأة سلطان',
         authorEn: 'Quran School',
-        date: 'منذ يومين • 2 days ago',
-        content: 'الحمد لله، تم اختتام حفل تكريم الطلاب المتفوقين في حفظ القرآن الكريم. نبارك لأبنائنا وبناتنا ونسأل الله أن يجعل القرآن شفيعاً لهم يوم القيامة.',
-        contentEn: 'Alhamdulillah, we concluded the honoring ceremony for outstanding Quran memorization students. Congratulations to our sons and daughters.',
-        likes: 234,
-        comments: 45,
-        shares: 12,
-        image: '/posts/graduation.jpg'
-    },
-    {
-        id: 2,
-        author: 'مدرسة القرآن الكريم',
-        authorEn: 'Quran School',
-        date: 'منذ أسبوع • 1 week ago',
-        content: 'جلسة تدريبية جديدة لمعلمي القرآن حول أحدث أساليب التدريس والتحفيظ. التطوير المستمر هو سر نجاحنا.',
-        contentEn: 'New training session for Quran teachers on the latest teaching and memorization methods. Continuous development is the secret to our success.',
-        likes: 189,
-        comments: 28,
-        shares: 8,
-        image: '/posts/training.jpg'
-    },
-    {
-        id: 3,
-        author: 'مدرسة القرآن الكريم',
-        authorEn: 'Quran School',
-        date: 'منذ أسبوعين • 2 weeks ago',
-        content: 'التسجيل مفتوح الآن للفصل الدراسي الجديد! انضم إلينا في رحلة حفظ القرآن الكريم مع نخبة من المعلمين المؤهلين.',
-        contentEn: 'Registration is now open for the new semester! Join us in the journey of Quran memorization with elite qualified teachers.',
-        likes: 456,
-        comments: 89,
-        shares: 34,
-        image: '/posts/registration.jpg'
-    },
+        date: 'منذ 3 ساعات • 3 hrs ago',
+        content: '📣 بشرى سارة لأهالينا الكرام..\n\nتم بحمد الله فتح باب التسجيل للدفعة الجديدة. نستقبل أبناءكم ليكونوا من أهل القرآن في بيئة تربوية آمنة وصحبة صالحة تعينهم على الخير.\n\nسارعوا بالتسجيل، فالأماكن محدودة!',
+        likes: 14054,
+        comments: 8657,
+        shares: 354,
+        image: '/images/schoollogo.jpg',
+    }
 ]
 
 export default function SocialProofSection() {
     return (
-        <section className="section-container bg-gray-50">
+        <section className="py-24 bg-white">
             <motion.div
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
                 className="text-center mb-16"
             >
-                <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-                    <span className="text-gradient">آخر الأخبار</span>
-                    <span className="block text-3xl sm:text-4xl mt-2 text-gray-700">Latest Updates</span>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                    <span className="text-primary">أحدث المنشورات</span>
                 </h2>
-                <div className="w-24 h-1 bg-gradient-to-r from-islamic-emerald to-islamic-gold mx-auto rounded-full" />
+                <div className="w-24 h-1.5 bg-secondary mx-auto rounded-full opacity-80" />
             </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="container mx-auto px-4 flex flex-col items-center justify-center">
                 {facebookPosts.map((post, index) => (
                     <motion.div
                         key={post.id}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.15, duration: 0.6 }}
+                        transition={{ delay: 0.2, duration: 0.6 }}
                         viewport={{ once: true }}
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl"
+                        className="w-full max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-shadow duration-300"
                     >
-                        {/* Post Header */}
-                        <div className="p-4 border-b border-gray-100">
-                            <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-islamic-gradient rounded-full flex items-center justify-center text-white font-bold text-lg">
-                                    ق
-                                </div>
-                                <div className="flex-1 text-right">
-                                    <h4 className="font-bold text-gray-900 font-arabic">{post.author}</h4>
-                                    <p className="text-sm text-gray-500">{post.authorEn}</p>
-                                    <p className="text-xs text-gray-400">{post.date}</p>
+                        {/* رأس البوست */}
+                        <div className="p-6 border-b border-gray-50 flex items-center gap-4 flex-row-reverse bg-gray-50/50">
+                            {/* استخدام اللوجو الصغير بدلاً من حرف ق */}
+                            <div className="w-14 h-14 relative rounded-full overflow-hidden border-2 border-primary/20 shadow-sm bg-white p-1">
+                                <Image
+                                    src="/images/schoollogo.png" // تأكد أن هذا هو اسم ملف اللوجو عندك
+                                    alt="شعار المدرسة"
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+
+                            <div className="flex-1 text-right">
+                                <h4 className="font-bold text-gray-900 text-lg leading-tight mb-1">
+                                    {post.author}
+                                </h4>
+                                <div className="flex items-center justify-end gap-2 text-sm text-gray-500">
+                                    <span>{post.date}</span>
+                                    <span>•</span>
+                                    <span className="text-primary font-medium">{post.authorEn}</span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Post Content */}
-                        <div className="p-4">
-                            <p className="text-gray-700 mb-3 text-right font-arabic leading-relaxed">
+                        {/* محتوى البوست النصي */}
+                        <div className="p-6 text-right">
+                            <p className="text-gray-800 text-xl leading-relaxed font-medium whitespace-pre-line font-sans">
                                 {post.content}
                             </p>
-                            <p className="text-gray-600 text-sm leading-relaxed">
-                                {post.contentEn}
-                            </p>
                         </div>
 
-                        {/* Post Image Placeholder */}
-                        <div className="relative h-48 bg-gradient-to-br from-islamic-emerald/20 to-islamic-gold/20 flex items-center justify-center">
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-islamic-emerald/30 rounded-full mx-auto mb-2 flex items-center justify-center">
-                                    <span className="text-3xl">📚</span>
-                                </div>
-                                <p className="text-sm text-gray-600 font-arabic">صورة من الفعالية</p>
+                        {/* 3. التغيير الرئيسي هنا: مكان الصورة الكبير */}
+                        <div className="relative w-full h-80 md:h-96 bg-gray-50 flex flex-col items-center justify-center border-y border-gray-50 group cursor-pointer overflow-hidden p-8">
+                            {/* خلفية زخرفية خفيفة جداً */}
+                            <div className="absolute inset-0 opacity-[0.03] bg-islamic-pattern bg-repeat space bg-[length:300px_300px]" />
+
+                            {/* حاوية اللوجو الكبير */}
+                            <div className="relative w-56 h-56 md:w-72 md:h-72 transition-transform duration-500 group-hover:scale-105">
+                                <Image
+                                    src="/images/schoollogo.jpg" // تأكد من مسار اللوجو
+                                    alt="شعار مدرسة القرآن"
+                                    fill // يجعل الصورة تملأ الحاوية الأب
+                                    // تأثيرات: باهت ورمادي في العادي، وملون وواضح عند الوقوف عليه
+                                    className="object-contain opacity-30 grayscale group-hover:grayscale-0 group-hover:opacity-90 transition-all duration-500 drop-shadow-sm"
+                                />
                             </div>
+                            <p className="text-primary font-bold mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">انقر لعرض التفاصيل</p>
                         </div>
 
-                        {/* Post Actions */}
-                        <div className="p-4 bg-gray-50 border-t border-gray-100">
-                            <div className="flex justify-around items-center text-gray-600">
-                                <motion.button
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="flex items-center gap-2 hover:text-islamic-emerald transition-colors"
-                                >
-                                    <ThumbsUp className="w-5 h-5" />
-                                    <span className="text-sm font-semibold">{post.likes}</span>
-                                </motion.button>
-                                <motion.button
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="flex items-center gap-2 hover:text-islamic-gold transition-colors"
-                                >
-                                    <MessageCircle className="w-5 h-5" />
-                                    <span className="text-sm font-semibold">{post.comments}</span>
-                                </motion.button>
-                                <motion.button
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="flex items-center gap-2 hover:text-blue-600 transition-colors"
-                                >
-                                    <Share2 className="w-5 h-5" />
-                                    <span className="text-sm font-semibold">{post.shares}</span>
-                                </motion.button>
+                        {/* أزرار التفاعل */}
+                        <div className="px-6 py-4 bg-white">
+                            <div className="flex justify-between items-center text-gray-500 border-t pt-4">
+                                <button className="flex items-center gap-2 hover:bg-gray-50 px-6 py-3 rounded-xl transition-all duration-300 group active:scale-95">
+                                    <Share2 className="w-7 h-7 group-hover:text-blue-600 transition-colors" />
+                                    <span className="font-bold text-lg">{post.shares}</span>
+                                </button>
+
+                                <button className="flex items-center gap-2 hover:bg-gray-50 px-6 py-3 rounded-xl transition-all duration-300 group active:scale-95">
+                                    <MessageCircle className="w-7 h-7 group-hover:text-secondary transition-colors" />
+                                    <span className="font-bold text-lg">{post.comments}</span>
+                                </button>
+
+                                <button className="flex items-center gap-2 hover:bg-gray-50 px-6 py-3 rounded-xl transition-all duration-300 group active:scale-95">
+                                    <ThumbsUp className="w-7 h-7 group-hover:text-primary transition-colors" />
+                                    <span className="font-bold text-lg">{post.likes}</span>
+                                </button>
                             </div>
                         </div>
                     </motion.div>

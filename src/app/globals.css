@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -11,29 +11,34 @@
   }
 
   body {
-    @apply bg-white text-gray-900 font-sans;
+    @apply bg-white text-gray-900 font-arabic;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold font-arabic;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-islamic-emerald hover:bg-islamic-emerald-dark text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
+    @apply bg-secondary hover:bg-secondary-dark text-white font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-gold hover:shadow-xl transform hover:-translate-y-0.5;
   }
 
   .btn-secondary {
-    @apply bg-islamic-gold hover:bg-islamic-gold-dark text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
+    @apply bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:-translate-y-0.5;
   }
 
   .input-field {
-    @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-islamic-emerald focus:ring-2 focus:ring-islamic-emerald focus:ring-opacity-20 transition-all duration-200 outline-none;
+    @apply w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 outline-none bg-white;
   }
 
   .card {
-    @apply bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-2xl;
+    @apply bg-white rounded-xl shadow-soft p-6 transition-all duration-300 hover:shadow-islamic border border-gray-100;
   }
 
   .section-container {
@@ -43,14 +48,52 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-islamic-emerald to-islamic-gold bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
   }
 
-  .bg-islamic-gradient {
-    @apply bg-gradient-to-br from-islamic-emerald via-islamic-emerald-dark to-islamic-emerald;
+  .shadow-soft {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 
   .shadow-islamic {
-    box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 20px rgba(107, 145, 104, 0.15);
   }
+
+  .shadow-gold {
+    box-shadow: 0 4px 20px rgba(201, 169, 97, 0.15);
+  }
+}
+
+/* DatePicker Custom Styling - Light Theme */
+.react-datepicker-wrapper {
+  @apply w-full;
+}
+
+.react-datepicker {
+  @apply border-2 border-primary/20 rounded-lg shadow-islamic;
+  font-family: 'Cairo', 'Tajawal', sans-serif;
+}
+
+.react-datepicker__header {
+  @apply bg-primary/10 border-b border-primary/20 rounded-t-lg;
+}
+
+.react-datepicker__current-month {
+  @apply text-primary font-bold;
+}
+
+.react-datepicker__day-name {
+  @apply text-primary/70 font-semibold;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-secondary hover:bg-secondary-dark text-white;
+}
+
+.react-datepicker__day--keyboard-selected {
+  @apply bg-primary hover:bg-primary-dark text-white;
+}
+
+.react-datepicker__day:hover {
+  @apply bg-primary/10;
 }

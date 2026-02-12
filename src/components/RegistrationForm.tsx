@@ -1,18 +1,27 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { useState } from 'react'
-import { Loader2, CheckCircle, XCircle, User, CreditCard, Calendar, GraduationCap, Phone, School } from 'lucide-react'
+import { Loader2, CheckCircle, XCircle, User, CreditCard, Calendar, GraduationCap, Phone, School, Users, Briefcase, MapPin, BookOpen } from 'lucide-react'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 interface RegistrationFormData {
     fullName: string
     nationalId: string
+    birthDate: Date | null
+    currentMemorization: string
     age: number
     educationType: 'azhari' | 'general'
     educationStage: 'primary' | 'preparatory' | 'secondary' | 'university' | 'graduated'
     gradeLevel: string
     whatsappNumber: string
+    guardianName?: string
+    guardianNationalId?: string
+    guardianOccupation?: string
+    guardianAddress?: string
+    guardianWhatsappNumber?: string
 }
 
 type SubmitState = 'idle' | 'loading' | 'success' | 'error'
@@ -27,10 +36,18 @@ export default function RegistrationForm() {
         formState: { errors },
         reset,
         watch,
-    } = useForm<RegistrationFormData>()
+        control,
+    } = useForm<RegistrationFormData>({
+        defaultValues: {
+            birthDate: null,
+        }
+    })
 
-    // Watch education stage to filter grade levels
+    // Watch education stage to filter grade levels and show/hide guardian section
     const selectedEducationStage = watch('educationStage')
+    const isGuardianRequired = selectedEducationStage &&
+        selectedEducationStage !== 'university' &&
+        selectedEducationStage !== 'graduated'
 
     // Define grade options based on education stage
     const getGradeOptions = () => {
@@ -89,11 +106,20 @@ export default function RegistrationForm() {
                 body: JSON.stringify({
                     fullName: data.fullName,
                     nationalId: data.nationalId,
+                    birthDate: data.birthDate?.toISOString(),
+                    currentMemorization: data.currentMemorization,
                     age: data.age,
                     educationType: data.educationType,
                     educationStage: data.educationStage,
                     gradeLevel: data.gradeLevel,
                     whatsappNumber: data.whatsappNumber,
+                    ...(isGuardianRequired && {
+                        guardianName: data.guardianName,
+                        guardianNationalId: data.guardianNationalId,
+                        guardianOccupation: data.guardianOccupation,
+                        guardianAddress: data.guardianAddress,
+                        guardianWhatsappNumber: data.guardianWhatsappNumber,
+                    }),
                     timestamp: new Date().toISOString(),
                 }),
             })
@@ -201,6 +227,71 @@ export default function RegistrationForm() {
                             )}
                         </div>
 
+                        {/* Birth Date */}
+                        <div>
+                            <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
+                                <div className="flex items-center justify-end gap-2">
+                                    <span>تاريخ الميلاد • Date of Birth</span>
+                                    <Calendar className="w-5 h-5 text-islamic-emerald" />
+                                </div>
+                            </label>
+                            <Controller
+                                name="birthDate"
+                                control={control}
+                                rules={{
+                                    required: 'تاريخ الميلاد مطلوب • Date of birth is required',
+                                    validate: (value) => {
+                                        if (!value) return 'تاريخ الميلاد مطلوب • Date of birth is required'
+                                        const age = Math.floor((new Date().getTime() - value.getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+                                        if (age < 5) return 'يجب أن يكون العمر 5 سنوات على الأقل • Age must be at least 5 years'
+                                        if (age > 100) return 'يرجى إدخال تاريخ ميلاد صحيح • Please enter a valid birth date'
+                                        return true
+                                    }
+                                }}
+                                render={({ field }) => (
+                                    <DatePicker
+                                        selected={field.value}
+                                        onChange={(date) => field.onChange(date)}
+                                        dateFormat="dd/MM/yyyy"
+                                        maxDate={new Date()}
+                                        showYearDropdown
+                                        scrollableYearDropdown
+                                        yearDropdownItemNumber={100}
+                                        placeholderText="اختر تاريخ الميلاد • Select birth date"
+                                        className={`input-field text-right w-full ${errors.birthDate ? 'border-red-500' : ''}`}
+                                    />
+                                )}
+                            />
+                            {errors.birthDate && (
+                                <p className="text-red-500 text-sm mt-1 text-right">{errors.birthDate.message}</p>
+                            )}
+                        </div>
+
+                        {/* Current Memorization */}
+                        <div>
+                            <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
+                                <div className="flex items-center justify-end gap-2">
+                                    <span>مقدار الحفظ الحالي • Current Memorization Amount</span>
+                                    <BookOpen className="w-5 h-5 text-islamic-emerald" />
+                                </div>
+                            </label>
+                            <input
+                                type="text"
+                                {...register('currentMemorization', {
+                                    required: 'مقدار الحفظ مطلوب • Current memorization is required',
+                                    minLength: {
+                                        value: 3,
+                                        message: 'يجب أن يكون النص 3 أحرف على الأقل • Must be at least 3 characters',
+                                    },
+                                })}
+                                className={`input-field text-right ${errors.currentMemorization ? 'border-red-500' : ''}`}
+                                placeholder="مثال: جزء عم • Example: Juz Amma"
+                            />
+                            {errors.currentMemorization && (
+                                <p className="text-red-500 text-sm mt-1 text-right">{errors.currentMemorization.message}</p>
+                            )}
+                        </div>
+
                         {/* Age */}
                         <div>
                             <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
@@ -238,36 +329,43 @@ export default function RegistrationForm() {
                                     <School className="w-5 h-5 text-islamic-emerald" />
                                 </div>
                             </label>
+
                             <div className="grid grid-cols-2 gap-4">
-                                <label className="flex items-center justify-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-islamic-emerald transition-all">
+                                {/* خيار عام */}
+                                <label className="cursor-pointer relative">
                                     <input
                                         type="radio"
                                         value="general"
                                         {...register('educationType', {
                                             required: 'نوع التعليم مطلوب • Education type is required',
                                         })}
-                                        className="sr-only peer"
+                                        className="peer sr-only"
                                     />
-                                    <div className="text-center peer-checked:text-islamic-emerald font-semibold">
-                                        <div className="font-arabic text-lg">عام</div>
-                                        <div className="text-sm">General</div>
+                                    {/* هذا الـ div هو المسئول عن الشكل الآن */}
+                                    <div className="flex flex-col items-center justify-center p-4 border-2 border-gray-300 rounded-lg transition-all hover:border-islamic-emerald peer-checked:border-islamic-emerald peer-checked:bg-green-300 peer-checked:text-islamic-emerald">
+                                        <div className="font-arabic text-lg font-bold">عام</div>
+                                        <div className="text-sm font-semibold">General</div>
                                     </div>
                                 </label>
-                                <label className="flex items-center justify-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-islamic-emerald transition-all">
+
+                                {/* خيار أزهري */}
+                                <label className="cursor-pointer relative">
                                     <input
                                         type="radio"
                                         value="azhari"
                                         {...register('educationType', {
                                             required: 'نوع التعليم مطلوب • Education type is required',
                                         })}
-                                        className="sr-only peer"
+                                        className="peer sr-only"
                                     />
-                                    <div className="text-center peer-checked:text-islamic-emerald font-semibold">
-                                        <div className="font-arabic text-lg">أزهري</div>
-                                        <div className="text-sm">Azhari</div>
+                                    {/* هذا الـ div هو المسئول عن الشكل الآن */}
+                                    <div className="flex flex-col items-center justify-center p-4 border-2 border-gray-300 rounded-lg transition-all hover:border-islamic-emerald peer-checked:border-islamic-emerald peer-checked:bg-green-300 peer-checked:text-islamic-emerald">
+                                        <div className="font-arabic text-lg font-bold">أزهري</div>
+                                        <div className="text-sm font-semibold">Azhari</div>
                                     </div>
                                 </label>
                             </div>
+
                             {errors.educationType && (
                                 <p className="text-red-500 text-sm mt-1 text-right">{errors.educationType.message}</p>
                             )}
@@ -299,36 +397,42 @@ export default function RegistrationForm() {
                             )}
                         </div>
 
-                        {/* Grade Level */}
-                        <div>
-                            <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                <div className="flex items-center justify-end gap-2">
-                                    <span>الصف الدراسي • Grade Level</span>
-                                    <School className="w-5 h-5 text-islamic-emerald" />
+                        {/* Grade Level - Hidden for university and graduated students */}
+                        {selectedEducationStage &&
+                            selectedEducationStage !== 'university' &&
+                            selectedEducationStage !== 'graduated' && (
+                                <div>
+                                    <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
+                                        <div className="flex items-center justify-end gap-2">
+                                            <span>الصف الدراسي • Grade Level</span>
+                                            <School className="w-5 h-5 text-islamic-emerald" />
+                                        </div>
+                                    </label>
+                                    <select
+                                        {...register('gradeLevel', {
+                                            required: selectedEducationStage !== 'university' && selectedEducationStage !== 'graduated'
+                                                ? 'الصف الدراسي مطلوب • Grade level is required'
+                                                : false,
+                                        })}
+                                        className={`input-field text-right ${errors.gradeLevel ? 'border-red-500' : ''}`}
+                                        disabled={!selectedEducationStage}
+                                    >
+                                        <option value="">
+                                            {selectedEducationStage
+                                                ? 'اختر الصف • Select grade'
+                                                : 'اختر المرحلة أولاً • Select stage first'}
+                                        </option>
+                                        {getGradeOptions().map(option => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.gradeLevel && (
+                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.gradeLevel.message}</p>
+                                    )}
                                 </div>
-                            </label>
-                            <select
-                                {...register('gradeLevel', {
-                                    required: 'الصف الدراسي مطلوب • Grade level is required',
-                                })}
-                                className={`input-field text-right ${errors.gradeLevel ? 'border-red-500' : ''}`}
-                                disabled={!selectedEducationStage}
-                            >
-                                <option value="">
-                                    {selectedEducationStage
-                                        ? 'اختر الصف • Select grade'
-                                        : 'اختر المرحلة أولاً • Select stage first'}
-                                </option>
-                                {getGradeOptions().map(option => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.gradeLevel && (
-                                <p className="text-red-500 text-sm mt-1 text-right">{errors.gradeLevel.message}</p>
                             )}
-                        </div>
 
                         {/* WhatsApp Number */}
                         <div>
@@ -354,6 +458,152 @@ export default function RegistrationForm() {
                                 <p className="text-red-500 text-sm mt-1 text-right">{errors.whatsappNumber.message}</p>
                             )}
                         </div>
+
+                        {/* Guardian Details Section - Conditional */}
+                        {isGuardianRequired && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="border-t-2 border-islamic-emerald/20 pt-6 mt-6"
+                            >
+                                <div className="mb-6">
+                                    <h3 className="text-2xl font-bold text-center mb-2 font-arabic text-islamic-emerald">
+                                        بيانات ولي الأمر
+                                    </h3>
+                                    <p className="text-center text-gray-600 text-lg">
+                                        Guardian Information
+                                    </p>
+                                    <div className="w-16 h-1 bg-gradient-to-r from-islamic-emerald to-islamic-gold mx-auto rounded-full mt-2" />
+                                </div>
+
+                                {/* Guardian Full Name */}
+                                <div>
+                                    <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
+                                        <div className="flex items-center justify-end gap-2">
+                                            <span>اسم ولي الأمر بالكامل • Guardian Full Name</span>
+                                            <Users className="w-5 h-5 text-islamic-emerald" />
+                                        </div>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        {...register('guardianName', {
+                                            required: isGuardianRequired ? 'اسم ولي الأمر مطلوب • Guardian name is required' : false,
+                                            minLength: {
+                                                value: 3,
+                                                message: 'يجب أن يكون الاسم 3 أحرف على الأقل • Name must be at least 3 characters',
+                                            },
+                                        })}
+                                        className={`input-field text-right ${errors.guardianName ? 'border-red-500' : ''}`}
+                                        placeholder="أدخل اسم ولي الأمر • Enter guardian name"
+                                    />
+                                    {errors.guardianName && (
+                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.guardianName.message}</p>
+                                    )}
+                                </div>
+
+                                {/* Guardian National ID */}
+                                <div>
+                                    <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
+                                        <div className="flex items-center justify-end gap-2">
+                                            <span>الرقم القومي لولي الأمر • Guardian National ID</span>
+                                            <CreditCard className="w-5 h-5 text-islamic-emerald" />
+                                        </div>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        {...register('guardianNationalId', {
+                                            required: isGuardianRequired ? 'الرقم القومي لولي الأمر مطلوب • Guardian national ID is required' : false,
+                                            pattern: {
+                                                value: /^\d{14}$/,
+                                                message: 'يجب أن يكون الرقم القومي 14 رقماً • National ID must be exactly 14 digits',
+                                            },
+                                        })}
+                                        className={`input-field text-right ${errors.guardianNationalId ? 'border-red-500' : ''}`}
+                                        placeholder="أدخل الرقم القومي (14 رقم) • Enter National ID (14 digits)"
+                                        maxLength={14}
+                                    />
+                                    {errors.guardianNationalId && (
+                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.guardianNationalId.message}</p>
+                                    )}
+                                </div>
+
+                                {/* Guardian Occupation */}
+                                <div>
+                                    <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
+                                        <div className="flex items-center justify-end gap-2">
+                                            <span>الوظيفة / العمل • Occupation / Work</span>
+                                            <Briefcase className="w-5 h-5 text-islamic-emerald" />
+                                        </div>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        {...register('guardianOccupation', {
+                                            required: isGuardianRequired ? 'الوظيفة مطلوبة • Occupation is required' : false,
+                                            minLength: {
+                                                value: 2,
+                                                message: 'يجب أن يكون النص حرفين على الأقل • Must be at least 2 characters',
+                                            },
+                                        })}
+                                        className={`input-field text-right ${errors.guardianOccupation ? 'border-red-500' : ''}`}
+                                        placeholder="أدخل الوظيفة • Enter occupation"
+                                    />
+                                    {errors.guardianOccupation && (
+                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.guardianOccupation.message}</p>
+                                    )}
+                                </div>
+
+                                {/* Guardian Address */}
+                                <div>
+                                    <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
+                                        <div className="flex items-center justify-end gap-2">
+                                            <span>عنوان ومحل الإقامة (تفصيلي) • Detailed Residential Address</span>
+                                            <MapPin className="w-5 h-5 text-islamic-emerald" />
+                                        </div>
+                                    </label>
+                                    <textarea
+                                        {...register('guardianAddress', {
+                                            required: isGuardianRequired ? 'العنوان مطلوب • Address is required' : false,
+                                            minLength: {
+                                                value: 10,
+                                                message: 'يجب أن يكون العنوان 10 أحرف على الأقل • Address must be at least 10 characters',
+                                            },
+                                        })}
+                                        rows={3}
+                                        className={`input-field text-right ${errors.guardianAddress ? 'border-red-500' : ''}`}
+                                        placeholder="أدخل العنوان التفصيلي • Enter detailed address"
+                                    />
+                                    {errors.guardianAddress && (
+                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.guardianAddress.message}</p>
+                                    )}
+                                </div>
+
+                                {/* Guardian WhatsApp Number */}
+                                <div>
+                                    <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
+                                        <div className="flex items-center justify-end gap-2">
+                                            <span>رقم تليفون ولي الأمر (واتساب) • Guardian WhatsApp Number</span>
+                                            <Phone className="w-5 h-5 text-islamic-emerald" />
+                                        </div>
+                                    </label>
+                                    <input
+                                        type="tel"
+                                        {...register('guardianWhatsappNumber', {
+                                            required: isGuardianRequired ? 'رقم الواتساب مطلوب • WhatsApp number is required' : false,
+                                            pattern: {
+                                                value: /^01[0-2,5]{1}[0-9]{8}$/,
+                                                message: 'يرجى إدخال رقم موبايل صحيح (11 رقم يبدأ بـ 01) • Please enter a valid mobile number (11 digits starting with 01)',
+                                            },
+                                        })}
+                                        className={`input-field text-right ${errors.guardianWhatsappNumber ? 'border-red-500' : ''}`}
+                                        placeholder="01012345678"
+                                    />
+                                    {errors.guardianWhatsappNumber && (
+                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.guardianWhatsappNumber.message}</p>
+                                    )}
+                                </div>
+                            </motion.div>
+                        )}
 
                         {/* Submit Button */}
                         <motion.button

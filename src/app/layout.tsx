@@ -1,13 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import Header from '@/components/Header'
 
 export const metadata: Metadata = {
-    title: 'Quran School - Learn the Holy Quran',
-    description: 'Join our prestigious Quran School and embark on a spiritual journey of learning and memorization.',
-    keywords: 'Quran, Islamic School, Hifz, Quran Memorization, Islamic Education',
+    title: 'مدرسة القرآن بمنشأة سلطان - Quran School',
+    description: 'تعليم أفراد المجتمع كتاب الله تعالى وتدبره والتخلق به من خلال أجود التطبيقات',
+    keywords: 'القرآن الكريم, مدرسة قرآنية, حفظ القرآن, تحفيظ, منشأة سلطان, Quran, Islamic School',
 }
 
 export default function RootLayout({
@@ -17,7 +15,10 @@ export default function RootLayout({
 }) {
     return (
         <html lang="ar" dir="rtl">
-            <body className={inter.className}>{children}</body>
+            <body className="font-arabic">
+                <Header />
+                {children}
+            </body>
         </html>
     )
 }
