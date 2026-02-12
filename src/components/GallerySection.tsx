@@ -77,7 +77,7 @@ export default function GallerySection() {
                                 <div className="relative w-auto h-full aspect-square max-h-[90%] shadow-2xl rounded-lg overflow-hidden border-4 border-white transform transition-transform duration-500 group-hover:scale-105 group-hover:rotate-1">
                                     <Image
                                         src={image.src}
-                                        alt={image.category}
+                                        alt="صورة من معرض المدرسة"
                                         fill
                                         className="object-contain bg-gray-100" // object-contain يمنع التمطيط
                                     />
