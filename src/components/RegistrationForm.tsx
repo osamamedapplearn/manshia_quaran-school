@@ -251,7 +251,7 @@ export default function RegistrationForm() {
                                 render={({ field }) => (
                                     <DatePicker
                                         selected={field.value}
-                                        onChange={(date) => field.onChange(date)}
+                                        onChange={(date: Date | null) => field.onChange(date)}
                                         dateFormat="dd/MM/yyyy"
                                         maxDate={new Date()}
                                         showYearDropdown
@@ -410,7 +410,9 @@ export default function RegistrationForm() {
                                     </label>
                                     <select
                                         {...register('gradeLevel', {
-                                            required: selectedEducationStage !== 'university' && selectedEducationStage !== 'graduated'
+                                            required: (selectedEducationStage === 'primary' ||
+                                                selectedEducationStage === 'preparatory' ||
+                                                selectedEducationStage === 'secondary')
                                                 ? 'الصف الدراسي مطلوب • Grade level is required'
                                                 : false,
                                         })}

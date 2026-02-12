@@ -2,9 +2,9 @@
 
 import { motion } from 'framer-motion'
 import { ThumbsUp, MessageCircle, Share2 } from 'lucide-react'
-import image from 'next/image'
 // 1. تأكدنا من استيراد مكون الصور من Next.js وحذفنا ImageIcon اللي مش محتاجينه
 import Image from 'next/image'
+
 
 const facebookPosts = [
     {
