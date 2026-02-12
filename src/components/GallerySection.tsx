@@ -87,7 +87,7 @@ export default function GallerySection() {
                             {/* شريط العنوان السفلي */}
                             <div className="absolute bottom-0 inset-x-0 z-20 bg-white/90 backdrop-blur-sm p-3 text-center translate-y-full group-hover:translate-y-0 transition-transform duration-300 border-t border-gray-100">
                                 <span className="text-primary font-bold text-sm">
-                                    {image.category}
+                                    معرض الصور
                                 </span>
                             </div>
                         </motion.div>
