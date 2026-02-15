@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useForm, Controller } from 'react-hook-form'
 import { useState } from 'react'
-import { Loader2, CheckCircle, XCircle, User, CreditCard, Calendar, GraduationCap, Phone, School, Users, Briefcase, MapPin, BookOpen } from 'lucide-react'
+import { Loader2, CheckCircle, XCircle, User, CreditCard, Calendar, GraduationCap, Phone, School, Users, Briefcase, MapPin, BookOpen, MessageCircle } from 'lucide-react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -644,7 +644,7 @@ export default function RegistrationForm() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-white rounded-2xl p-8 sm:p-12 max-w-md w-full shadow-2xl text-center"
+                            className="bg-white rounded-2xl p-8 sm:p-12 max-w-md w-full shadow-2xl text-center border-4 border-islamic-emerald"
                         >
                             <motion.div
                                 initial={{ scale: 0 }}
@@ -654,17 +654,32 @@ export default function RegistrationForm() {
                                 <CheckCircle className="w-20 h-20 text-islamic-emerald mx-auto mb-6" />
                             </motion.div>
                             <h3 className="text-3xl font-bold text-gray-900 mb-4 font-arabic">
-                                تم التسجيل بنجاح!
+                                تم تسجيل بياناتك بنجاح! 🎉
                             </h3>
                             <p className="text-xl text-gray-700 mb-2">Registration Successful!</p>
-                            <p className="text-gray-600 mb-6">
-                                سنتواصل معك قريباً عبر الواتساب
+                            <p className="text-gray-600 mb-6 text-lg">
+                                خطوة واحدة أخيرة: يرجى الانضمام لجروب الواتساب الرسمي لمتابعة مواعيد الاختبارات والدروس.
                                 <br />
-                                We will contact you soon on WhatsApp
+                                <span className="text-sm">One final step: Please join the official WhatsApp group to follow exam schedules and lessons.</span>
                             </p>
+
+                            {/* Primary WhatsApp Group Button */}
+                            <motion.a
+                                href="https://chat.whatsapp.com/GFUNTrnPeYaG8ywIu4S6Ma"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="w-full bg-islamic-emerald hover:bg-emerald-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 mb-4 text-lg animate-pulse"
+                            >
+                                <MessageCircle className="w-6 h-6" />
+                                <span>انضم إلى جروب الواتساب الآن</span>
+                            </motion.a>
+
+                            {/* Secondary OK Button */}
                             <button
                                 onClick={() => setSubmitState('idle')}
-                                className="btn-primary"
+                                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all duration-300"
                             >
                                 حسناً • OK
                             </button>

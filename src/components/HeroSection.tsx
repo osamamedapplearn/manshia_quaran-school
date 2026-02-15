@@ -88,7 +88,9 @@ export default function HeroSection() {
 
                         {/* Secondary Button - Green Outline */}
                         <motion.a
-                            href="#contact"
+                            href="https://wa.me/201158118765"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
                             className="inline-flex items-center gap-3 px-8 py-4 bg-transparent border-2 border-islamic-green text-islamic-green hover:bg-islamic-green hover:text-white font-bold text-lg rounded-full transition-all duration-300 font-arabic"

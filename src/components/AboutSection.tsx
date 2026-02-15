@@ -5,30 +5,8 @@ import { Eye, Target, Star, CheckCircle2 } from 'lucide-react'
 
 export default function AboutSection() {
     const sections = [
-        {
-            icon: Eye,
-            title: 'رؤيتنا',
-            titleEn: 'Our Vision',
-            description: 'تعليم أفراد المجتمع كتاب الله تعالى وتدبره والتخلق به من خلال أجود التطبيقات',
-            color: 'emerald',
-            borderColor: 'border-islamic-emerald',
-            bgGradient: 'from-islamic-emerald/5 to-islamic-emerald/10',
-            iconBg: 'bg-islamic-emerald',
-            iconRing: 'ring-2 ring-islamic-gold/40',
-            textColor: 'text-islamic-emerald'
-        },
-        {
-            icon: Target,
-            title: 'رسالتنا',
-            titleEn: 'Our Mission',
-            description: 'تقديم برامج متميزة في تعليم القرآن الكريم تلاوةً وحفظاً وتدبراً في بيئة احترافية آمنة من خلال كوادر مؤهلة وشراكة مجتمعية فاعلة',
-            color: 'emerald',
-            borderColor: 'border-islamic-emerald',
-            bgGradient: 'from-emerald-50 to-emerald-100',
-            iconBg: 'bg-islamic-emerald',
-            iconRing: 'ring-4 ring-islamic-gold/50',
-            textColor: 'text-emerald-700'
-        },
+
+
         {
             icon: Star,
             title: 'أهداف المدرسة',
@@ -65,7 +43,7 @@ export default function AboutSection() {
                 <div className="w-24 h-1 bg-gradient-to-r from-islamic-emerald to-islamic-gold mx-auto rounded-full" />
             </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="flex justify-center">
                 {sections.map((section, index) => (
                     <motion.div
                         key={index}
@@ -74,7 +52,7 @@ export default function AboutSection() {
                         transition={{ delay: index * 0.2, duration: 0.6 }}
                         viewport={{ once: true }}
                         whileHover={{ y: -8, scale: 1.02 }}
-                        className={`relative bg-white rounded-2xl shadow-lg border-t-4 ${section.borderColor} overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-2xl`}
+                        className={`relative bg-white rounded-2xl shadow-lg border-t-4 ${section.borderColor} overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-2xl w-full max-w-lg`}
                     >
                         {/* Gradient Background that intensifies on hover */}
                         <div className={`absolute inset-0 bg-gradient-to-br ${section.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />

@@ -17,7 +17,7 @@ const facebookPosts = [
         likes: 14054,
         comments: 8657,
         shares: 354,
-        image: '/images/schoollogo.jpg',
+        image: '/images/logo1.png',
     }
 ]
 
@@ -52,7 +52,7 @@ export default function SocialProofSection() {
                             {/* استخدام اللوجو الصغير بدلاً من حرف ق */}
                             <div className="w-14 h-14 relative rounded-full overflow-hidden border-2 border-primary/20 shadow-sm bg-white p-1">
                                 <Image
-                                    src="/images/schoollogo.png" // تأكد أن هذا هو اسم ملف اللوجو عندك
+                                    src="/images/logo1.png" // تأكد أن هذا هو اسم ملف اللوجو عندك
                                     alt="شعار المدرسة"
                                     fill
                                     className="object-contain"

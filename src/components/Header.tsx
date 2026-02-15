@@ -11,7 +11,7 @@ export default function Header() {
     const navLinks = [
         { href: '#about', label: 'من نحن', labelEn: 'About' },
         { href: '#registration', label: 'التسجيل', labelEn: 'Register' },
-        { href: '#contact', label: 'تواصل معنا', labelEn: 'Contact' },
+        { href: 'https://wa.me/201158118765', label: 'تواصل معنا', labelEn: 'Contact', external: true },
     ]
 
     return (
@@ -25,7 +25,7 @@ export default function Header() {
                         className="flex items-center gap-3"
                     >
                         <Image
-                            src="/images/schoollogo.jpg"
+                            src="/images/logo1.png"
                             alt="مدرسة القرآن بمنشأة سلطان"
                             width={140}
                             height={300}

@@ -18,7 +18,7 @@ export default function Footer() {
                     >
                         <div className="flex justify-center mb-4">
                             <Image
-                                src="/images/schoollogo.jpg"
+                                src="/images/logo1.png"
                                 alt="مدرسة القرآن بمنشأة سلطان"
                                 width={240}
                                 height={240}
