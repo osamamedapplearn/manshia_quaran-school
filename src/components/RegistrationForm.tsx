@@ -91,11 +91,11 @@ export default function RegistrationForm() {
         setErrorMessage('')
 
         try {
-            // Hardcoded webhook URL to bypass environment variable issues
-            const webhookUrl = "https://manshia-quran.me/api/v1/registration"
+            // Use environment variable for webhook URL
+            const webhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL
 
             if (!webhookUrl) {
-                throw new Error('Webhook URL is not configured')
+                throw new Error('Webhook URL is not configured. Please contact the administrator.')
             }
 
             const response = await fetch(webhookUrl, {
