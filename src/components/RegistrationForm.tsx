@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Loader2, CheckCircle, XCircle, User, CreditCard, Calendar, GraduationCap, Phone, School, Users, Briefcase, MapPin, BookOpen, MessageCircle } from 'lucide-react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { UiVariant } from './uiVariant'
 
 interface RegistrationFormData {
     fullName: string
@@ -26,9 +27,14 @@ interface RegistrationFormData {
 
 type SubmitState = 'idle' | 'loading' | 'success' | 'error'
 
-export default function RegistrationForm() {
+interface RegistrationFormProps {
+    variant?: UiVariant
+}
+
+export default function RegistrationForm({ variant = 'v1' }: RegistrationFormProps) {
     const [submitState, setSubmitState] = useState<SubmitState>('idle')
     const [errorMessage, setErrorMessage] = useState('')
+    const sheetsEndpoint = 'https://script.google.com/macros/s/AKfycbzM9hxOSDgJa6gurNOf3CuR23eC3ZzlcPrTuEnbzNinCoRFGufiU8MfDT4LxTU0CXCa/exec'
 
     const {
         register,
@@ -91,43 +97,32 @@ export default function RegistrationForm() {
         setErrorMessage('')
 
         try {
-            // Use environment variable for webhook URL
-            const webhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL
-
-            if (!webhookUrl) {
-                throw new Error('Webhook URL is not configured. Please contact the administrator.')
+            const payload = {
+                NationalID: data.nationalId,
+                Name: data.fullName,
+                birthdate: data.birthDate ? data.birthDate.toISOString().split('T')[0] : '',
+                Age: data.age,
+                EducationType: data.educationType,
+                EducationStage: data.educationStage,
+                'grade level': data.gradeLevel || '',
+                WhatsApp: data.whatsappNumber,
+                SubmittedAt: new Date().toISOString(),
+                guardianName: isGuardianRequired ? (data.guardianName ?? '') : '',
+                guardianNationalId: isGuardianRequired ? (data.guardianNationalId ?? '') : '',
+                guardianOccupation: isGuardianRequired ? (data.guardianOccupation ?? '') : '',
+                guardianAddress: isGuardianRequired ? (data.guardianAddress ?? '') : '',
+                guardianWhatsappNumber: isGuardianRequired ? (data.guardianWhatsappNumber ?? '') : '',
+                Memoraization: data.currentMemorization,
             }
 
-            const response = await fetch(webhookUrl, {
+            await fetch(sheetsEndpoint, {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true',
+                    'Content-Type': 'text/plain;charset=utf-8',
                 },
-                body: JSON.stringify({
-                    fullName: data.fullName,
-                    nationalId: data.nationalId,
-                    birthDate: data.birthDate?.toISOString(),
-                    currentMemorization: data.currentMemorization,
-                    age: data.age,
-                    educationType: data.educationType,
-                    educationStage: data.educationStage,
-                    gradeLevel: data.gradeLevel,
-                    whatsappNumber: data.whatsappNumber,
-                    ...(isGuardianRequired && {
-                        guardianName: data.guardianName,
-                        guardianNationalId: data.guardianNationalId,
-                        guardianOccupation: data.guardianOccupation,
-                        guardianAddress: data.guardianAddress,
-                        guardianWhatsappNumber: data.guardianWhatsappNumber,
-                    }),
-                    timestamp: new Date().toISOString(),
-                }),
+                body: JSON.stringify(payload),
             })
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
-            }
 
             setSubmitState('success')
             reset()
@@ -147,8 +142,53 @@ export default function RegistrationForm() {
         }
     }
 
+    const sectionClassName =
+        variant === 'v1'
+            ? 'section-container bg-white'
+            : variant === 'v2'
+                ? 'section-container bg-transparent'
+                : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 bg-transparent relative z-10'
+
+    const getLabelText = (arabic: string, english: string) => {
+        if (variant !== 'v3') return <span>{`${arabic} • ${english}`}</span>
+        return (
+            <span className="text-right">
+                <span className="block v3-label-ar">{arabic}</span>
+                <span className="block v3-label-en">{english}</span>
+            </span>
+        )
+    }
+
+    const formShellClassName =
+        variant === 'v1'
+            ? 'bg-white rounded-2xl shadow-2xl p-8 sm:p-12 border-2 border-gray-100'
+            : variant === 'v2'
+                ? 'bento-shell p-7 sm:p-12'
+                : 'glass-shell p-7 sm:p-12'
+
+    const formThemeClassName =
+        variant === 'v2'
+            ? 'form-v2'
+            : variant === 'v3'
+                ? 'form-v3'
+                : ''
+
+    const headingClassName =
+        variant === 'v3'
+            ? 'text-4xl sm:text-5xl font-bold text-[#064e3b] mb-4 text-center'
+            : variant === 'v2'
+                ? 'text-4xl sm:text-5xl font-bold text-slate-900 mb-4'
+                : 'text-4xl sm:text-5xl font-bold text-gray-900 mb-4'
+
+    const submitButtonClassName =
+        variant === 'v2'
+            ? 'w-full text-xl py-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-full transition-all duration-300 border-2 border-islamic-gold/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-islamic-gold/60'
+            : variant === 'v3'
+                ? 'w-full text-xl py-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 bg-[#EAB308] hover:bg-[#b99638] text-[#064e3b] font-bold rounded-2xl transition-all duration-300 border border-[#EAB308]/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EAB308]/80'
+                : 'w-full btn-primary text-xl py-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-islamic-emerald/60'
+
     return (
-        <section id="registration" className="section-container bg-white">
+        <section id="registration" className={sectionClassName} aria-label="نموذج التسجيل">
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -156,14 +196,14 @@ export default function RegistrationForm() {
                 viewport={{ once: true }}
                 className="text-center mb-16"
             >
-                <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-                    <span className="bg-gradient-to-r from-islamic-emerald via-emerald-600 to-islamic-emerald bg-clip-text text-transparent">التسجيل</span>
-                    <span className="block text-3xl sm:text-4xl mt-2 text-gray-700">Registration</span>
+                <h2 className={headingClassName}>
+                    <span className={variant === 'v3' ? 'text-[#EAB308]' : 'bg-gradient-to-r from-islamic-emerald via-emerald-600 to-islamic-emerald bg-clip-text text-transparent'}>التسجيل</span>
+                    <span className={`block text-3xl sm:text-4xl mt-2 ${variant === 'v3' ? 'text-[#064e3b]/90' : 'text-gray-700'}`}>Registration</span>
                 </h2>
-                <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+                <p className={`text-lg max-w-2xl mx-auto ${variant === 'v3' ? 'text-[#064e3b]/85' : 'text-gray-600'}`}>
                     انضم إلى عائلتنا وابدأ رحلتك في حفظ القرآن الكريم
                     <br />
-                    <span className="text-base">Join our family and start your Quran memorization journey</span>
+                    <span className={`text-base ${variant === 'v3' ? 'text-[#064e3b]/75' : ''}`}>Join our family and start your Quran memorization journey</span>
                 </p>
                 <div className="w-24 h-1 bg-gradient-to-r from-islamic-emerald to-islamic-gold mx-auto rounded-full mt-4" />
             </motion.div>
@@ -175,17 +215,18 @@ export default function RegistrationForm() {
                 viewport={{ once: true }}
                 className="max-w-3xl mx-auto"
             >
-                <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-12 border-2 border-gray-100">
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <div className={formShellClassName}>
+                    <form onSubmit={handleSubmit(onSubmit)} className={`space-y-6 ${formThemeClassName}`} noValidate aria-live="polite">
                         {/* Full Name */}
                         <div>
-                            <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                <div className="flex items-center justify-end gap-2">
-                                    <span>الاسم الكامل • Full Name</span>
-                                    <User className="w-5 h-5 text-islamic-emerald" />
+                            <label htmlFor="fullName" className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
+                                <div className="flex w-full items-center justify-end gap-2 text-right">
+                                    {getLabelText('الاسم الكامل', 'Full Name')}
+                                    <User className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                 </div>
                             </label>
                             <input
+                                id="fullName"
                                 type="text"
                                 {...register('fullName', {
                                     required: 'الاسم الكامل مطلوب • Full name is required',
@@ -196,21 +237,24 @@ export default function RegistrationForm() {
                                 })}
                                 className={`input-field text-right ${errors.fullName ? 'border-red-500' : ''}`}
                                 placeholder="أدخل الاسم الكامل • Enter full name"
+                                aria-invalid={Boolean(errors.fullName)}
+                                aria-describedby={errors.fullName ? 'fullName-error' : undefined}
                             />
                             {errors.fullName && (
-                                <p className="text-red-500 text-sm mt-1 text-right">{errors.fullName.message}</p>
+                                <p id="fullName-error" className="text-red-500 text-sm mt-1 text-right">{errors.fullName.message}</p>
                             )}
                         </div>
 
                         {/* National ID */}
                         <div>
-                            <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                <div className="flex items-center justify-end gap-2">
-                                    <span>الرقم القومي • National ID</span>
-                                    <CreditCard className="w-5 h-5 text-islamic-emerald" />
+                            <label htmlFor="nationalId" className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
+                                <div className="flex w-full items-center justify-end gap-2 text-right">
+                                    {getLabelText('الرقم القومي', 'National ID')}
+                                    <CreditCard className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                 </div>
                             </label>
                             <input
+                                id="nationalId"
                                 type="text"
                                 {...register('nationalId', {
                                     required: 'الرقم القومي مطلوب • National ID is required',
@@ -222,18 +266,20 @@ export default function RegistrationForm() {
                                 className={`input-field text-right ${errors.nationalId ? 'border-red-500' : ''}`}
                                 placeholder="أدخل الرقم القومي (14 رقم) • Enter National ID (14 digits)"
                                 maxLength={14}
+                                aria-invalid={Boolean(errors.nationalId)}
+                                aria-describedby={errors.nationalId ? 'nationalId-error' : undefined}
                             />
                             {errors.nationalId && (
-                                <p className="text-red-500 text-sm mt-1 text-right">{errors.nationalId.message}</p>
+                                <p id="nationalId-error" className="text-red-500 text-sm mt-1 text-right">{errors.nationalId.message}</p>
                             )}
                         </div>
 
                         {/* Birth Date */}
                         <div>
                             <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                <div className="flex items-center justify-end gap-2">
-                                    <span>تاريخ الميلاد • Date of Birth</span>
-                                    <Calendar className="w-5 h-5 text-islamic-emerald" />
+                                <div className="flex w-full items-center justify-end gap-2 text-right">
+                                    {getLabelText('تاريخ الميلاد', 'Date of Birth')}
+                                    <Calendar className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                 </div>
                             </label>
                             <Controller
@@ -259,21 +305,24 @@ export default function RegistrationForm() {
                                         scrollableYearDropdown
                                         yearDropdownItemNumber={100}
                                         placeholderText="اختر تاريخ الميلاد • Select birth date"
+                                        id="birthDate"
                                         className={`input-field text-right w-full ${errors.birthDate ? 'border-red-500' : ''}`}
+                                        aria-invalid={Boolean(errors.birthDate)}
+                                        aria-describedby={errors.birthDate ? 'birthDate-error' : undefined}
                                     />
                                 )}
                             />
                             {errors.birthDate && (
-                                <p className="text-red-500 text-sm mt-1 text-right">{errors.birthDate.message}</p>
+                                <p id="birthDate-error" className="text-red-500 text-sm mt-1 text-right">{errors.birthDate.message}</p>
                             )}
                         </div>
 
                         {/* Current Memorization */}
                         <div>
                             <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                <div className="flex items-center justify-end gap-2">
-                                    <span>مقدار الحفظ الحالي • Current Memorization Amount</span>
-                                    <BookOpen className="w-5 h-5 text-islamic-emerald" />
+                                <div className="flex w-full items-center justify-end gap-2 text-right">
+                                    {getLabelText('مقدار الحفظ الحالي', 'Current Memorization Amount')}
+                                    <BookOpen className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                 </div>
                             </label>
                             <input
@@ -288,17 +337,26 @@ export default function RegistrationForm() {
                                 className={`input-field text-right ${errors.currentMemorization ? 'border-red-500' : ''}`}
                                 placeholder="مثال: جزء عم • Example: Juz Amma"
                             />
-                            {errors.currentMemorization && (
-                                <p className="text-red-500 text-sm mt-1 text-right">{errors.currentMemorization.message}</p>
-                            )}
+                            <AnimatePresence>
+                                {errors.currentMemorization && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.currentMemorization.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         {/* Age */}
                         <div>
                             <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                <div className="flex items-center justify-end gap-2">
-                                    <span>العمر • Age</span>
-                                    <Calendar className="w-5 h-5 text-islamic-emerald" />
+                                <div className="flex w-full items-center justify-end gap-2 text-right">
+                                    {getLabelText('العمر', 'Age')}
+                                    <Calendar className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                 </div>
                             </label>
                             <input
@@ -317,21 +375,30 @@ export default function RegistrationForm() {
                                 className={`input-field text-right ${errors.age ? 'border-red-500' : ''}`}
                                 placeholder="أدخل العمر • Enter age"
                             />
-                            {errors.age && (
-                                <p className="text-red-500 text-sm mt-1 text-right">{errors.age.message}</p>
-                            )}
+                            <AnimatePresence>
+                                {errors.age && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.age.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         {/* Education Type */}
                         <div>
                             <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                <div className="flex items-center justify-end gap-2">
-                                    <span>نوع التعليم • Education Type</span>
-                                    <School className="w-5 h-5 text-islamic-emerald" />
+                                <div className="flex w-full items-center justify-end gap-2 text-right">
+                                    {getLabelText('نوع التعليم', 'Education Type')}
+                                    <School className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                 </div>
                             </label>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className={`grid grid-cols-2 ${variant === 'v3' ? 'gap-10' : 'gap-4'}`}>
                                 {/* خيار عام */}
                                 <label className="cursor-pointer relative">
                                     <input
@@ -343,7 +410,7 @@ export default function RegistrationForm() {
                                         className="peer sr-only"
                                     />
                                     {/* هذا الـ div هو المسئول عن الشكل الآن */}
-                                    <div className="flex flex-col items-center justify-center p-4 border-2 border-gray-300 rounded-lg transition-all hover:border-islamic-emerald peer-checked:border-islamic-emerald peer-checked:bg-green-300 peer-checked:text-islamic-emerald">
+                                    <div className={`flex flex-col items-center justify-center p-4 border-2 rounded-lg transition-all hover:border-islamic-emerald peer-checked:border-islamic-emerald peer-checked:text-islamic-emerald ${variant === 'v3' ? 'border-green-200 bg-white shadow-sm peer-checked:bg-green-50 peer-checked:border-[#064e3b] peer-checked:text-[#064e3b]' : variant === 'v2' ? 'border-gray-300 peer-checked:bg-islamic-gold/20' : 'border-gray-300 peer-checked:bg-emerald-50'}`}>
                                         <div className="font-arabic text-lg font-bold">عام</div>
                                         <div className="text-sm font-semibold">General</div>
                                     </div>
@@ -360,24 +427,33 @@ export default function RegistrationForm() {
                                         className="peer sr-only"
                                     />
                                     {/* هذا الـ div هو المسئول عن الشكل الآن */}
-                                    <div className="flex flex-col items-center justify-center p-4 border-2 border-gray-300 rounded-lg transition-all hover:border-islamic-emerald peer-checked:border-islamic-emerald peer-checked:bg-green-300 peer-checked:text-islamic-emerald">
+                                    <div className={`flex flex-col items-center justify-center p-4 border-2 rounded-lg transition-all hover:border-islamic-emerald peer-checked:border-islamic-emerald peer-checked:text-islamic-emerald ${variant === 'v3' ? 'border-green-200 bg-white shadow-sm peer-checked:bg-green-50 peer-checked:border-[#064e3b] peer-checked:text-[#064e3b]' : variant === 'v2' ? 'border-gray-300 peer-checked:bg-islamic-gold/20' : 'border-gray-300 peer-checked:bg-emerald-50'}`}>
                                         <div className="font-arabic text-lg font-bold">أزهري</div>
                                         <div className="text-sm font-semibold">Azhari</div>
                                     </div>
                                 </label>
                             </div>
 
-                            {errors.educationType && (
-                                <p className="text-red-500 text-sm mt-1 text-right">{errors.educationType.message}</p>
-                            )}
+                            <AnimatePresence>
+                                {errors.educationType && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.educationType.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         {/* Education Stage */}
                         <div>
                             <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                <div className="flex items-center justify-end gap-2">
-                                    <span>المرحلة الدراسية • Education Stage</span>
-                                    <GraduationCap className="w-5 h-5 text-islamic-emerald" />
+                                <div className="flex w-full items-center justify-end gap-2 text-right">
+                                    {getLabelText('المرحلة الدراسية', 'Education Stage')}
+                                    <GraduationCap className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                 </div>
                             </label>
                             <select
@@ -393,9 +469,18 @@ export default function RegistrationForm() {
                                 <option value="university">جامعي • University</option>
                                 <option value="graduated">خريج • Graduated</option>
                             </select>
-                            {errors.educationStage && (
-                                <p className="text-red-500 text-sm mt-1 text-right">{errors.educationStage.message}</p>
-                            )}
+                            <AnimatePresence>
+                                {errors.educationStage && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.educationStage.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         {/* Grade Level - Hidden for university and graduated students */}
@@ -404,9 +489,9 @@ export default function RegistrationForm() {
                             selectedEducationStage !== 'graduated' && (
                                 <div>
                                     <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <span>الصف الدراسي • Grade Level</span>
-                                            <School className="w-5 h-5 text-islamic-emerald" />
+                                        <div className="flex w-full items-center justify-end gap-2 text-right">
+                                            {getLabelText('الصف الدراسي', 'Grade Level')}
+                                            <School className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                         </div>
                                     </label>
                                     <select
@@ -431,18 +516,27 @@ export default function RegistrationForm() {
                                             </option>
                                         ))}
                                     </select>
-                                    {errors.gradeLevel && (
-                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.gradeLevel.message}</p>
-                                    )}
+                                    <AnimatePresence>
+                                {errors.gradeLevel && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.gradeLevel.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                                 </div>
                             )}
 
                         {/* WhatsApp Number */}
                         <div>
                             <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                <div className="flex items-center justify-end gap-2">
-                                    <span>رقم الواتساب • WhatsApp Number</span>
-                                    <Phone className="w-5 h-5 text-islamic-emerald" />
+                                    <div className="flex w-full items-center justify-end gap-2 text-right">
+                                    {getLabelText('رقم الواتساب', 'WhatsApp Number')}
+                                    <Phone className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                 </div>
                             </label>
                             <input
@@ -457,9 +551,18 @@ export default function RegistrationForm() {
                                 className={`input-field text-right ${errors.whatsappNumber ? 'border-red-500' : ''}`}
                                 placeholder="01012345678"
                             />
-                            {errors.whatsappNumber && (
-                                <p className="text-red-500 text-sm mt-1 text-right">{errors.whatsappNumber.message}</p>
-                            )}
+                            <AnimatePresence>
+                                {errors.whatsappNumber && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.whatsappNumber.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         {/* Guardian Details Section - Conditional */}
@@ -471,10 +574,10 @@ export default function RegistrationForm() {
                                 className="border-t-2 border-islamic-emerald/20 pt-6 mt-6"
                             >
                                 <div className="mb-6">
-                                    <h3 className="text-2xl font-bold text-center mb-2 font-arabic text-islamic-emerald">
+                                    <h3 className={`text-2xl font-bold text-center mb-2 font-arabic ${variant === 'v3' ? 'text-[#064e3b]' : 'text-islamic-emerald'}`}>
                                         بيانات ولي الأمر
                                     </h3>
-                                    <p className="text-center text-gray-600 text-lg">
+                                    <p className={`text-center text-lg ${variant === 'v3' ? 'text-[#064e3b]' : 'text-gray-600'}`}>
                                         Guardian Information
                                     </p>
                                     <div className="w-16 h-1 bg-gradient-to-r from-islamic-emerald to-islamic-gold mx-auto rounded-full mt-2" />
@@ -483,9 +586,9 @@ export default function RegistrationForm() {
                                 {/* Guardian Full Name */}
                                 <div>
                                     <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <span>اسم ولي الأمر بالكامل • Guardian Full Name</span>
-                                            <Users className="w-5 h-5 text-islamic-emerald" />
+                                        <div className="flex w-full items-center justify-end gap-2 text-right">
+                                            {getLabelText('اسم ولي الأمر بالكامل', 'Guardian Full Name')}
+                                            <Users className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                         </div>
                                     </label>
                                     <input
@@ -500,17 +603,26 @@ export default function RegistrationForm() {
                                         className={`input-field text-right ${errors.guardianName ? 'border-red-500' : ''}`}
                                         placeholder="أدخل اسم ولي الأمر • Enter guardian name"
                                     />
-                                    {errors.guardianName && (
-                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.guardianName.message}</p>
-                                    )}
+                                    <AnimatePresence>
+                                {errors.guardianName && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.guardianName.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                                 </div>
 
                                 {/* Guardian National ID */}
                                 <div>
                                     <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <span>الرقم القومي لولي الأمر • Guardian National ID</span>
-                                            <CreditCard className="w-5 h-5 text-islamic-emerald" />
+                                        <div className="flex w-full items-center justify-end gap-2 text-right">
+                                            {getLabelText('الرقم القومي لولي الأمر', 'Guardian National ID')}
+                                            <CreditCard className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                         </div>
                                     </label>
                                     <input
@@ -526,17 +638,26 @@ export default function RegistrationForm() {
                                         placeholder="أدخل الرقم القومي (14 رقم) • Enter National ID (14 digits)"
                                         maxLength={14}
                                     />
-                                    {errors.guardianNationalId && (
-                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.guardianNationalId.message}</p>
-                                    )}
+                                    <AnimatePresence>
+                                {errors.guardianNationalId && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.guardianNationalId.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                                 </div>
 
                                 {/* Guardian Occupation */}
                                 <div>
                                     <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <span>الوظيفة / العمل • Occupation / Work</span>
-                                            <Briefcase className="w-5 h-5 text-islamic-emerald" />
+                                        <div className="flex w-full items-center justify-end gap-2 text-right">
+                                            {getLabelText('الوظيفة / العمل', 'Occupation / Work')}
+                                            <Briefcase className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                         </div>
                                     </label>
                                     <input
@@ -551,17 +672,26 @@ export default function RegistrationForm() {
                                         className={`input-field text-right ${errors.guardianOccupation ? 'border-red-500' : ''}`}
                                         placeholder="أدخل الوظيفة • Enter occupation"
                                     />
-                                    {errors.guardianOccupation && (
-                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.guardianOccupation.message}</p>
-                                    )}
+                                    <AnimatePresence>
+                                {errors.guardianOccupation && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.guardianOccupation.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                                 </div>
 
                                 {/* Guardian Address */}
                                 <div>
                                     <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <span>عنوان ومحل الإقامة (تفصيلي) • Detailed Residential Address</span>
-                                            <MapPin className="w-5 h-5 text-islamic-emerald" />
+                                        <div className="flex w-full items-center justify-end gap-2 text-right">
+                                            {getLabelText('عنوان ومحل الإقامة (تفصيلي)', 'Detailed Residential Address')}
+                                            <MapPin className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                         </div>
                                     </label>
                                     <textarea
@@ -576,17 +706,26 @@ export default function RegistrationForm() {
                                         className={`input-field text-right ${errors.guardianAddress ? 'border-red-500' : ''}`}
                                         placeholder="أدخل العنوان التفصيلي • Enter detailed address"
                                     />
-                                    {errors.guardianAddress && (
-                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.guardianAddress.message}</p>
-                                    )}
+                                    <AnimatePresence>
+                                {errors.guardianAddress && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.guardianAddress.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                                 </div>
 
                                 {/* Guardian WhatsApp Number */}
                                 <div>
                                     <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <span>رقم تليفون ولي الأمر (واتساب) • Guardian WhatsApp Number</span>
-                                            <Phone className="w-5 h-5 text-islamic-emerald" />
+                                        <div className="flex w-full items-center justify-end gap-2 text-right">
+                                            {getLabelText('رقم تليفون ولي الأمر (واتساب)', 'Guardian WhatsApp Number')}
+                                            <Phone className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                         </div>
                                     </label>
                                     <input
@@ -601,9 +740,18 @@ export default function RegistrationForm() {
                                         className={`input-field text-right ${errors.guardianWhatsappNumber ? 'border-red-500' : ''}`}
                                         placeholder="01012345678"
                                     />
-                                    {errors.guardianWhatsappNumber && (
-                                        <p className="text-red-500 text-sm mt-1 text-right">{errors.guardianWhatsappNumber.message}</p>
-                                    )}
+                                    <AnimatePresence>
+                                {errors.guardianWhatsappNumber && (
+                                    <motion.p 
+                                        initial={{ opacity: 0, y: -10, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                        exit={{ opacity: 0, y: -10, height: 0 }}
+                                        className="text-red-500 text-sm mt-1 text-right"
+                                    >
+                                        {errors.guardianWhatsappNumber.message}
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                                 </div>
                             </motion.div>
                         )}
@@ -614,7 +762,7 @@ export default function RegistrationForm() {
                             disabled={submitState === 'loading'}
                             whileHover={{ scale: submitState === 'loading' ? 1 : 1.02 }}
                             whileTap={{ scale: submitState === 'loading' ? 1 : 0.98 }}
-                            className="w-full btn-primary text-xl py-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                            className={submitButtonClassName}
                         >
                             {submitState === 'loading' ? (
                                 <>
@@ -638,6 +786,9 @@ export default function RegistrationForm() {
                         exit={{ opacity: 0 }}
                         className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
                         onClick={() => setSubmitState('idle')}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="تم التسجيل بنجاح"
                     >
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0 }}
@@ -654,7 +805,7 @@ export default function RegistrationForm() {
                                 <CheckCircle className="w-20 h-20 text-islamic-emerald mx-auto mb-6" />
                             </motion.div>
                             <h3 className="text-3xl font-bold text-gray-900 mb-4 font-arabic">
-                                تم تسجيل بياناتك بنجاح! 🎉
+                                تم تسجيل بياناتك بنجاح
                             </h3>
                             <p className="text-xl text-gray-700 mb-2">Registration Successful!</p>
                             <p className="text-gray-600 mb-6 text-lg">
@@ -678,6 +829,7 @@ export default function RegistrationForm() {
 
                             {/* Secondary OK Button */}
                             <button
+                                type="button"
                                 onClick={() => setSubmitState('idle')}
                                 className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all duration-300"
                             >
@@ -697,6 +849,9 @@ export default function RegistrationForm() {
                         exit={{ opacity: 0 }}
                         className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
                         onClick={() => setSubmitState('idle')}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="حدث خطأ في التسجيل"
                     >
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0 }}
@@ -718,6 +873,7 @@ export default function RegistrationForm() {
                             <p className="text-xl text-gray-700 mb-2">Registration Error</p>
                             <p className="text-gray-600 mb-6 text-sm">{errorMessage}</p>
                             <button
+                                type="button"
                                 onClick={() => setSubmitState('idle')}
                                 className="btn-secondary"
                             >

@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
     return (
-        <main className="min-h-screen pt-20">
-            <RegistrationForm />
+        <main id="main-content" className="min-h-screen pt-20">
+            <RegistrationForm variant="v1" />
         </main>
     )
 }

@@ -1,71 +1,49 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Facebook } from 'lucide-react'
-import Image from 'next/image'
+import { UiVariant } from './uiVariant'
 
-export default function Footer() {
+interface FooterProps {
+    variant?: UiVariant
+}
+
+export default function Footer({ variant = 'v1' }: FooterProps) {
+    const footerClassName =
+        variant === 'v1'
+            ? 'bg-gray-900 text-white'
+            : variant === 'v2'
+                ? 'bg-slate-950 text-white'
+                : 'relative z-10 bg-transparent text-[#064e3b]'
+
     return (
-        <footer className="bg-gray-900 text-white">
-            <div className="section-container">
-                <div className="flex flex-col items-center justify-center gap-8 mb-12">
-                    {/* Logo and Name */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center"
-                    >
-                        <div className="flex justify-center mb-4">
-                            <Image
-                                src="/images/logo1.png"
-                                alt="مدرسة القرآن بمنشأة سلطان"
-                                width={240}
-                                height={240}
-                                className="rounded-lg"
-                            />
-                        </div>
-                        <h3 className="text-2xl font-bold mb-4 text-islamic-gold font-arabic">
-                            مدرسة القرآن بمنشأة سلطان
-                        </h3>
-                        <p className="text-gray-400 mb-6 leading-relaxed font-arabic max-w-2xl">
-                            مدرسة قرآنية تهتم بتعليم القرآن الكريم لجميع الفئات العمرية بقرية منشأة سلطان
-                        </p>
-                    </motion.div>
-
-                    {/* Facebook Link Only */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        viewport={{ once: true }}
-                        className="text-center"
-                    >
-                        <h3 className="text-xl font-bold mb-4 text-islamic-gold font-arabic">
-                            تابعنا على فيسبوك
-                        </h3>
-                        <motion.a
-                            href="https://www.facebook.com/madrasatquran.ms"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            whileHover={{ scale: 1.1, y: -5 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="inline-flex items-center gap-3 px-6 py-3 bg-islamic-emerald rounded-full hover:bg-islamic-emerald-dark transition-colors"
-                            aria-label="Facebook"
-                        >
-                            <Facebook className="w-6 h-6" />
-                            <span className="font-arabic font-semibold">صفحتنا على فيسبوك</span>
-                        </motion.a>
-                    </motion.div>
-                </div>
-
-                <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
-                    <p className="font-arabic">
+        <footer className={footerClassName}>
+            <div className={`${variant === 'v3' ? 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 glass-shell' : 'section-container'}`}>
+                <div className={`border-t pt-8 text-center ${variant === 'v3' ? 'border-[#064e3b]/20 text-[#064e3b]' : 'border-gray-800 text-gray-400'}`}>
+                    <p className="font-arabic text-xl sm:text-2xl font-bold mb-3">
                         مدرسة القرآن الكريم بمنشأة سلطان
-
-
                     </p>
-                    <p className="font-arabic">Made by O.A.M </p>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.55, ease: 'easeOut' }}
+                        className="mt-4 flex justify-center"
+                    >
+                        <div className="flex flex-col items-center leading-none">
+                            <motion.p
+                                className={`font-mono text-3xl sm:text-4xl font-black tracking-[0.2em] ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}
+                                animate={{ y: [0, -1, 0] }}
+                                transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+                            >
+                                O.A.M
+                            </motion.p>
+
+                            <p className={`mt-1 text-[11px] sm:text-xs font-semibold tracking-[0.42em] uppercase ${variant === 'v3' ? 'text-[#064e3b]/85' : 'text-white/80'}`}>
+                                MEDAPP
+                            </p>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </footer>

@@ -4,6 +4,22 @@ A high-converting, modern Islamic landing page with n8n automation integration f
 
 ## ✨ Features
 
+### 🧩 UI Variant Routes
+
+Three production-ready visual variants are available with the same functional logic:
+
+- Version 1 (Ultra-Minimalist & Clean)
+   - Home: `/`
+   - Register: `/register`
+- Version 2 (Modern & Bold)
+   - Home: `/v2`
+   - Register: `/register/v2`
+- Version 3 (Corporate & Trustworthy)
+   - Home: `/v3`
+   - Register: `/register/v3`
+
+All versions keep the same registration validation, conditional guardian fields, and n8n submission behavior.
+
 ### 🎨 **Modern Islamic Design**
 - Serene color palette: Emerald Green (#10b981), Gold (#f59e0b), and White
 - Smooth animations powered by Framer Motion

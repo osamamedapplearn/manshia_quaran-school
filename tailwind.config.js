@@ -56,8 +56,8 @@ module.exports = {
             },
 
             fontFamily: {
-                arabic: ['Cairo', 'Tajawal', 'Scheherazade New', 'serif'],
-                sans: ['Inter', 'Cairo', 'system-ui', 'sans-serif'],
+                arabic: ['Almarai', 'Tajawal', 'Cairo', 'Scheherazade New', 'serif'],
+                sans: ['Almarai', 'Tajawal', 'Cairo', 'system-ui', 'sans-serif'],
             },
 
             backgroundImage: {
@@ -73,6 +73,15 @@ module.exports = {
                 'islamic': '0 4px 20px rgba(16, 185, 129, 0.15)',
                 'gold': '0 4px 20px rgba(197, 160, 101, 0.15)',
                 'soft': '0 2px 8px rgba(0, 0, 0, 0.05)',
+            },
+            keyframes: {
+                'mesh-royal': {
+                    '0%': { backgroundPosition: '0% 0%' },
+                    '100%': { backgroundPosition: '100% 100%' },
+                },
+            },
+            animation: {
+                'mesh-royal': 'mesh-royal 22s ease-in-out infinite alternate',
             },
         },
     },

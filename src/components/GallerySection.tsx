@@ -2,9 +2,13 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { UiVariant } from './uiVariant'
 
-export default function GallerySection() {
-    // قمت بإصلاح البيانات وإضافة نصوص بديلة لتجنب الأخطاء
+interface GallerySectionProps {
+    variant?: UiVariant
+}
+
+export default function GallerySection({ variant = 'v1' }: GallerySectionProps) {
     const galleryImages = [
         { src: '/images/1.jpg', },
         { src: '/images/2.jpg', },
@@ -31,8 +35,24 @@ export default function GallerySection() {
 
     ]
 
+    const sectionClassName =
+        variant === 'v1'
+            ? 'py-20 bg-gray-50'
+            : variant === 'v2'
+                ? 'py-20 bg-transparent'
+                : 'relative z-10 py-24 bg-transparent'
+
+    const cardClassName =
+        variant === 'v1'
+            ? 'group relative h-72 rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-white'
+            : variant === 'v2'
+                ? 'group relative h-72 rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.08)]'
+                : 'group relative h-72 rounded-3xl overflow-hidden border border-green-100 bg-white/25 backdrop-blur-xl shadow-[0_10px_26px_rgba(16,185,129,0.14)]'
+
+    const v3Heights = ['h-72', 'h-80', 'h-96', 'h-80', 'h-72']
+
     return (
-        <section id="gallery" className="py-20 bg-gray-50">
+        <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } }} id="gallery" className={sectionClassName} aria-label="معرض صور المدرسة">
             <div className="container mx-auto px-4">
                 {/* Section Header */}
                 <motion.div
@@ -41,17 +61,17 @@ export default function GallerySection() {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-4xl font-bold text-islamic-emerald mb-4 font-arabic">
+                    <h2 className={`text-4xl font-bold mb-4 font-arabic ${variant === 'v3' ? 'text-[#EAB308]' : 'text-islamic-emerald'}`}>
                         معرض الصور
                     </h2>
-                    <p className="text-gray-600 text-lg">
+                    <p className={`text-lg ${variant === 'v3' ? 'text-[#064e3b]/80' : 'text-gray-600'}`}>
                         لحظات لا تُنسى من رحلتنا القرآنية المباركة
                     </p>
                     <div className="w-24 h-1 bg-secondary mx-auto rounded-full mt-4" />
                 </motion.div>
 
                 {/* Gallery Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className={variant === 'v3' ? 'columns-1 sm:columns-2 lg:columns-3 gap-10 [column-fill:_balance]' : `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${variant === 'v2' ? 'auto-rows-[18rem]' : ''}`}>
                     {galleryImages.map((image, index) => (
                         <motion.div
                             key={index}
@@ -59,34 +79,30 @@ export default function GallerySection() {
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.1 }}
                             viewport={{ once: true }}
-                            // هذا التصميم عبارة عن كارت بحدود ناعمة
-                            className="group relative h-72 rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-white"
+                            className={`${cardClassName} ${variant === 'v3' ? `mb-12 break-inside-avoid ${v3Heights[index % v3Heights.length]}` : ''} ${variant === 'v2' && index % 5 === 0 ? 'lg:col-span-2' : ''} ${variant === 'v2' && index % 7 === 0 ? 'md:row-span-2 h-full min-h-[24rem]' : ''}`}
                         >
-                            {/* 1. الطبقة الخلفية: الصورة مكبرة جداً ومشوشة (Blur) لتعمل كخلفية ملونة */}
                             <div className="absolute inset-0 z-0">
                                 <Image
                                     src={image.src}
-                                    alt="background"
+                                    alt="خلفية صورة من أنشطة المدرسة"
                                     fill
-                                    className="object-cover blur-xl opacity-50 scale-125"
+                                    className={`object-cover blur-xl scale-125 ${variant === 'v3' ? 'opacity-35' : 'opacity-50'}`}
                                 />
                             </div>
 
-                            {/* 2. الطبقة الأمامية: الصورة بحجمها الطبيعي في المنتصف */}
                             <div className="relative z-10 h-full w-full flex items-center justify-center p-4">
-                                <div className="relative w-auto h-full aspect-square max-h-[90%] shadow-2xl rounded-lg overflow-hidden border-4 border-white transform transition-transform duration-500 group-hover:scale-105 group-hover:rotate-1">
+                                <div className={`relative ${variant === 'v3' ? 'w-full aspect-video' : 'w-auto h-full aspect-square max-h-[90%]'} shadow-2xl rounded-3xl overflow-hidden border-4 border-white transform transition-transform duration-500 group-hover:scale-105 group-hover:rotate-1`}>
                                     <Image
                                         src={image.src}
-                                        alt="صورة من معرض المدرسة"
+                                        alt={`صورة رقم ${index + 1} من معرض المدرسة`}
                                         fill
-                                        className="object-contain bg-gray-100" // object-contain يمنع التمطيط
+                                        className={`${variant === 'v3' ? 'object-cover bg-white/10' : 'object-contain bg-gray-100'}`}
                                     />
                                 </div>
                             </div>
 
-                            {/* شريط العنوان السفلي */}
-                            <div className="absolute bottom-0 inset-x-0 z-20 bg-white/90 backdrop-blur-sm p-3 text-center translate-y-full group-hover:translate-y-0 transition-transform duration-300 border-t border-gray-100">
-                                <span className="text-primary font-bold text-sm">
+                            <div className={`absolute bottom-0 inset-x-0 z-20 backdrop-blur-sm p-3 text-center translate-y-full group-hover:translate-y-0 transition-transform duration-300 border-t ${variant === 'v3' ? 'bg-white/10 border-white/20' : 'bg-white/90 border-gray-100'}`}>
+                                <span className={`font-bold text-sm ${variant === 'v3' ? 'text-[#064e3b]' : 'text-primary'}`}>
                                     معرض الصور
                                 </span>
                             </div>
@@ -94,6 +110,6 @@ export default function GallerySection() {
                     ))}
                 </div>
             </div>
-        </section>
+        </motion.section>
     )
 }
