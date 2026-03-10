@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { UiVariant } from './uiVariant'
 
 interface FooterProps {
@@ -8,6 +9,12 @@ interface FooterProps {
 }
 
 export default function Footer({ variant = 'v1' }: FooterProps) {
+    const [isMounted, setIsMounted] = useState(false)
+
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
+
     const footerClassName =
         variant === 'v1'
             ? 'bg-gray-900 text-white'
@@ -23,27 +30,40 @@ export default function Footer({ variant = 'v1' }: FooterProps) {
                         مدرسة القرآن الكريم بمنشأة سلطان
                     </p>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.55, ease: 'easeOut' }}
-                        className="mt-4 flex justify-center"
-                    >
-                        <div className="flex flex-col items-center leading-none">
-                            <motion.p
-                                className={`font-mono text-3xl sm:text-4xl font-black tracking-[0.2em] ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}
-                                animate={{ y: [0, -1, 0] }}
-                                transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-                            >
-                                O.A.M
-                            </motion.p>
+                    {isMounted ? (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.55, ease: 'easeOut' }}
+                            className="mt-4 flex justify-center"
+                        >
+                            <div className="flex flex-col items-center leading-none">
+                                <motion.p
+                                    className={`font-mono text-3xl sm:text-4xl font-black tracking-[0.2em] ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}
+                                    animate={{ y: [0, -1, 0] }}
+                                    transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+                                >
+                                    O.A.M
+                                </motion.p>
 
-                            <p className={`mt-1 text-[11px] sm:text-xs font-semibold tracking-[0.42em] uppercase ${variant === 'v3' ? 'text-[#064e3b]/85' : 'text-white/80'}`}>
-                                MEDAPP
-                            </p>
+                                <p className={`mt-1 text-[11px] sm:text-xs font-semibold tracking-[0.42em] uppercase ${variant === 'v3' ? 'text-[#064e3b]/85' : 'text-white/80'}`}>
+                                    MEDAPP
+                                </p>
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <div className="mt-4 flex justify-center">
+                            <div className="flex flex-col items-center leading-none">
+                                <p className={`font-mono text-3xl sm:text-4xl font-black tracking-[0.2em] ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}>
+                                    O.A.M
+                                </p>
+                                <p className={`mt-1 text-[11px] sm:text-xs font-semibold tracking-[0.42em] uppercase ${variant === 'v3' ? 'text-[#064e3b]/85' : 'text-white/80'}`}>
+                                    MEDAPP
+                                </p>
+                            </div>
                         </div>
-                    </motion.div>
+                    )}
                 </div>
             </div>
         </footer>

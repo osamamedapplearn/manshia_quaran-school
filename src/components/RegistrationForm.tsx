@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useForm, Controller } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Loader2, CheckCircle, XCircle, User, CreditCard, Calendar, GraduationCap, Phone, School, Users, Briefcase, MapPin, BookOpen, MessageCircle } from 'lucide-react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -34,7 +34,12 @@ interface RegistrationFormProps {
 export default function RegistrationForm({ variant = 'v1' }: RegistrationFormProps) {
     const [submitState, setSubmitState] = useState<SubmitState>('idle')
     const [errorMessage, setErrorMessage] = useState('')
+    const [maxBirthDate, setMaxBirthDate] = useState<Date | undefined>(undefined)
     const sheetsEndpoint = 'https://script.google.com/macros/s/AKfycbzM9hxOSDgJa6gurNOf3CuR23eC3ZzlcPrTuEnbzNinCoRFGufiU8MfDT4LxTU0CXCa/exec'
+
+    useEffect(() => {
+        setMaxBirthDate(new Date())
+    }, [])
 
     const {
         register,
@@ -300,7 +305,7 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                                         selected={field.value}
                                         onChange={(date: Date | null) => field.onChange(date)}
                                         dateFormat="dd/MM/yyyy"
-                                        maxDate={new Date()}
+                                        maxDate={maxBirthDate}
                                         showYearDropdown
                                         scrollableYearDropdown
                                         yearDropdownItemNumber={100}
