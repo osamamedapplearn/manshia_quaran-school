@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { UiVariant } from './uiVariant'
 
 interface FooterProps {
@@ -30,6 +31,18 @@ export default function Footer({ variant = 'v1' }: FooterProps) {
                         مدرسة القرآن الكريم بمنشأة سلطان
                     </p>
 
+                    <div className="mt-4 flex justify-center">
+                        <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-white/55 border border-green-100 shadow-[0_10px_24px_rgba(16,185,129,0.18)]">
+                            <Image
+                                src="/images/logo1.png"
+                                alt="شعار مدرسة القرآن"
+                                fill
+                                className="object-contain p-2"
+                                sizes="96px"
+                            />
+                        </div>
+                    </div>
+
                     {isMounted ? (
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}
@@ -38,9 +51,9 @@ export default function Footer({ variant = 'v1' }: FooterProps) {
                             transition={{ duration: 0.55, ease: 'easeOut' }}
                             className="mt-4 flex justify-center"
                         >
-                            <div className="flex flex-col items-center leading-none">
+                            <div className="flex flex-col items-center">
                                 <motion.p
-                                    className={`font-mono text-3xl sm:text-4xl font-black tracking-[0.2em] ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}
+                                    className={`font-mono text-2xl sm:text-3xl font-black tracking-[0.2em] ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}
                                     animate={{ y: [0, -1, 0] }}
                                     transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
                                 >
@@ -54,8 +67,8 @@ export default function Footer({ variant = 'v1' }: FooterProps) {
                         </motion.div>
                     ) : (
                         <div className="mt-4 flex justify-center">
-                            <div className="flex flex-col items-center leading-none">
-                                <p className={`font-mono text-3xl sm:text-4xl font-black tracking-[0.2em] ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}>
+                            <div className="flex flex-col items-center">
+                                <p className={`font-mono text-2xl sm:text-3xl font-black tracking-[0.2em] ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}>
                                     O.A.M
                                 </p>
                                 <p className={`mt-1 text-[11px] sm:text-xs font-semibold tracking-[0.42em] uppercase ${variant === 'v3' ? 'text-[#064e3b]/85' : 'text-white/80'}`}>
