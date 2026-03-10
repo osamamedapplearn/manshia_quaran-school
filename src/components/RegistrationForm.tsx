@@ -301,20 +301,33 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                                     }
                                 }}
                                 render={({ field }) => (
-                                    <DatePicker
-                                        selected={field.value}
-                                        onChange={(date: Date | null) => field.onChange(date)}
-                                        dateFormat="dd/MM/yyyy"
-                                        maxDate={maxBirthDate}
-                                        showYearDropdown
-                                        scrollableYearDropdown
-                                        yearDropdownItemNumber={100}
-                                        placeholderText="اختر تاريخ الميلاد • Select birth date"
-                                        id="birthDate"
-                                        className={`input-field text-right w-full ${errors.birthDate ? 'border-red-500' : ''}`}
-                                        aria-invalid={Boolean(errors.birthDate)}
-                                        aria-describedby={errors.birthDate ? 'birthDate-error' : undefined}
-                                    />
+                                    maxBirthDate ? (
+                                        <DatePicker
+                                            selected={field.value}
+                                            onChange={(date: Date | null) => field.onChange(date)}
+                                            dateFormat="dd/MM/yyyy"
+                                            maxDate={maxBirthDate}
+                                            showYearDropdown
+                                            scrollableYearDropdown
+                                            yearDropdownItemNumber={100}
+                                            placeholderText="اختر تاريخ الميلاد • Select birth date"
+                                            id="birthDate"
+                                            className={`input-field text-right w-full ${errors.birthDate ? 'border-red-500' : ''}`}
+                                            aria-invalid={Boolean(errors.birthDate)}
+                                            aria-describedby={errors.birthDate ? 'birthDate-error' : undefined}
+                                        />
+                                    ) : (
+                                        <input
+                                            id="birthDate"
+                                            type="text"
+                                            readOnly
+                                            value=""
+                                            placeholder="اختر تاريخ الميلاد • Select birth date"
+                                            className={`input-field text-right w-full ${errors.birthDate ? 'border-red-500' : ''}`}
+                                            aria-invalid={Boolean(errors.birthDate)}
+                                            aria-describedby={errors.birthDate ? 'birthDate-error' : undefined}
+                                        />
+                                    )
                                 )}
                             />
                             {errors.birthDate && (
