@@ -43,33 +43,38 @@ export default function Footer({ variant = 'v1' }: FooterProps) {
                         </div>
                     </div>
 
-                    <p className={`mt-4 font-arabic text-sm sm:text-base ${variant === 'v3' ? 'text-[#064e3b]/85' : 'text-white/85'}`}>
-                        صُنع بكل حُب بواسطة
-                    </p>
-
                     {isMounted ? (
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.55, ease: 'easeOut' }}
-                            className="mt-2 flex justify-center"
+                            className="mt-4 flex justify-center"
                         >
-                            <motion.p
-                                className={`font-signature text-3xl sm:text-4xl leading-loose ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}
-                                initial={{ clipPath: 'inset(0 100% 0 0)', opacity: 0.35 }}
-                                whileInView={{ clipPath: 'inset(0 0% 0 0)', opacity: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 1.2, ease: 'easeInOut' }}
-                            >
-                                أسامة عطية مدبب
-                            </motion.p>
+                            <div className="flex flex-col items-center">
+                                <motion.p
+                                    className={`font-mono text-2xl sm:text-3xl font-black tracking-[0.2em] ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}
+                                    animate={{ y: [0, -1, 0] }}
+                                    transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+                                >
+                                    O.A.M
+                                </motion.p>
+
+                                <p className={`mt-1 text-[11px] sm:text-xs font-semibold tracking-[0.42em] uppercase ${variant === 'v3' ? 'text-[#064e3b]/85' : 'text-white/80'}`}>
+                                    MEDAPP
+                                </p>
+                            </div>
                         </motion.div>
                     ) : (
-                        <div className="mt-2 flex justify-center">
-                            <p className={`font-signature text-3xl sm:text-4xl leading-loose ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}>
-                                أسامة عطية مدبب
-                            </p>
+                        <div className="mt-4 flex justify-center">
+                            <div className="flex flex-col items-center">
+                                <p className={`font-mono text-2xl sm:text-3xl font-black tracking-[0.2em] ${variant === 'v3' ? 'text-[#064e3b]' : 'text-white'}`}>
+                                    O.A.M
+                                </p>
+                                <p className={`mt-1 text-[11px] sm:text-xs font-semibold tracking-[0.42em] uppercase ${variant === 'v3' ? 'text-[#064e3b]/85' : 'text-white/80'}`}>
+                                    MEDAPP
+                                </p>
+                            </div>
                         </div>
                     )}
                 </div>
