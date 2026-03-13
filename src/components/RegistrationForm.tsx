@@ -12,16 +12,11 @@ interface RegistrationFormData {
     fullName: string
     nationalId: string
     birthDate: Date | null
-    currentMemorization: string
+    nominatedRing: string
     age: number
     educationType: 'azhari' | 'general'
     educationStage: 'primary' | 'preparatory' | 'secondary' | 'university' | 'graduated'
-    gradeLevel: string
-    whatsappNumber: string
-    guardianName?: string
     guardianNationalId?: string
-    guardianOccupation?: string
-    guardianAddress?: string
     guardianWhatsappNumber?: string
 }
 
@@ -60,43 +55,6 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
         selectedEducationStage !== 'university' &&
         selectedEducationStage !== 'graduated'
 
-    // Define grade options based on education stage
-    const getGradeOptions = () => {
-        switch (selectedEducationStage) {
-            case 'primary':
-                return [
-                    { value: 'grade_1_primary', label: 'الصف الأول الابتدائي • 1st Grade' },
-                    { value: 'grade_2_primary', label: 'الصف الثاني الابتدائي • 2nd Grade' },
-                    { value: 'grade_3_primary', label: 'الصف الثالث الابتدائي • 3rd Grade' },
-                    { value: 'grade_4_primary', label: 'الصف الرابع الابتدائي • 4th Grade' },
-                    { value: 'grade_5_primary', label: 'الصف الخامس الابتدائي • 5th Grade' },
-                    { value: 'grade_6_primary', label: 'الصف السادس الابتدائي • 6th Grade' },
-                ]
-            case 'preparatory':
-                return [
-                    { value: 'grade_1_preparatory', label: 'الصف الأول الإعدادي • 1st Prep' },
-                    { value: 'grade_2_preparatory', label: 'الصف الثاني الإعدادي • 2nd Prep' },
-                    { value: 'grade_3_preparatory', label: 'الصف الثالث الإعدادي • 3rd Prep' },
-                ]
-            case 'secondary':
-                return [
-                    { value: 'grade_1_secondary', label: 'الصف الأول الثانوي • 1st Secondary' },
-                    { value: 'grade_2_secondary', label: 'الصف الثاني الثانوي • 2nd Secondary' },
-                    { value: 'grade_3_secondary', label: 'الصف الثالث الثانوي • 3rd Secondary' },
-                ]
-            case 'university':
-                return [
-                    { value: 'university', label: 'جامعي • University' },
-                ]
-            case 'graduated':
-                return [
-                    { value: 'graduated', label: 'خريج • Graduated' },
-                ]
-            default:
-                return []
-        }
-    }
-
     const onSubmit = async (data: RegistrationFormData) => {
         setSubmitState('loading')
         setErrorMessage('')
@@ -109,15 +67,15 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                 Age: data.age,
                 EducationType: data.educationType,
                 EducationStage: data.educationStage,
-                'grade level': data.gradeLevel || '',
-                WhatsApp: data.whatsappNumber,
+                'grade level': '',
+                WhatsApp: isGuardianRequired ? (data.guardianWhatsappNumber ?? '') : '',
                 SubmittedAt: new Date().toISOString(),
-                guardianName: isGuardianRequired ? (data.guardianName ?? '') : '',
+                guardianName: '',
                 guardianNationalId: isGuardianRequired ? (data.guardianNationalId ?? '') : '',
-                guardianOccupation: isGuardianRequired ? (data.guardianOccupation ?? '') : '',
-                guardianAddress: isGuardianRequired ? (data.guardianAddress ?? '') : '',
+                guardianOccupation: '',
+                guardianAddress: '',
                 guardianWhatsappNumber: isGuardianRequired ? (data.guardianWhatsappNumber ?? '') : '',
-                Memoraization: data.currentMemorization,
+                Memoraization: data.nominatedRing,
             }
 
             await fetch(sheetsEndpoint, {
@@ -335,35 +293,35 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                             )}
                         </div>
 
-                        {/* Current Memorization */}
+                        {/* Nominated Ring */}
                         <div>
                             <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
                                 <div className="flex w-full items-center justify-end gap-2 text-right">
-                                    {getLabelText('مقدار الحفظ الحالي', 'Current Memorization Amount')}
+                                    {getLabelText('الحلقة المرشح لها', 'Nominated Ring')}
                                     <BookOpen className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                 </div>
                             </label>
                             <input
                                 type="text"
-                                {...register('currentMemorization', {
-                                    required: 'مقدار الحفظ مطلوب • Current memorization is required',
+                                {...register('nominatedRing', {
+                                    required: 'الحلقة المرشح لها مطلوبة • Nominated ring is required',
                                     minLength: {
-                                        value: 3,
-                                        message: 'يجب أن يكون النص 3 أحرف على الأقل • Must be at least 3 characters',
+                                        value: 2,
+                                        message: 'يجب أن يكون النص حرفين على الأقل • Must be at least 2 characters',
                                     },
                                 })}
-                                className={`input-field text-right ${errors.currentMemorization ? 'border-red-500' : ''}`}
-                                placeholder="مثال: جزء عم • Example: Juz Amma"
+                                className={`input-field text-right ${errors.nominatedRing ? 'border-red-500' : ''}`}
+                                placeholder="أدخل الحلقة المرشح لها • Enter nominated ring"
                             />
                             <AnimatePresence>
-                                {errors.currentMemorization && (
+                                {errors.nominatedRing && (
                                     <motion.p
                                         initial={{ opacity: 0, y: -10, height: 0 }}
                                         animate={{ opacity: 1, y: 0, height: 'auto' }}
                                         exit={{ opacity: 0, y: -10, height: 0 }}
                                         className="text-red-500 text-sm mt-1 text-right"
                                     >
-                                        {errors.currentMemorization.message}
+                                        {errors.nominatedRing.message}
                                     </motion.p>
                                 )}
                             </AnimatePresence>
@@ -501,87 +459,7 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                             </AnimatePresence>
                         </div>
 
-                        {/* Grade Level - Hidden for university and graduated students */}
-                        {selectedEducationStage &&
-                            selectedEducationStage !== 'university' &&
-                            selectedEducationStage !== 'graduated' && (
-                                <div>
-                                    <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                        <div className="flex w-full items-center justify-end gap-2 text-right">
-                                            {getLabelText('الصف الدراسي', 'Grade Level')}
-                                            <School className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
-                                        </div>
-                                    </label>
-                                    <select
-                                        {...register('gradeLevel', {
-                                            required: (selectedEducationStage === 'primary' ||
-                                                selectedEducationStage === 'preparatory' ||
-                                                selectedEducationStage === 'secondary')
-                                                ? 'الصف الدراسي مطلوب • Grade level is required'
-                                                : false,
-                                        })}
-                                        className={`input-field text-right ${errors.gradeLevel ? 'border-red-500' : ''}`}
-                                        disabled={!selectedEducationStage}
-                                    >
-                                        <option value="">
-                                            {selectedEducationStage
-                                                ? 'اختر الصف • Select grade'
-                                                : 'اختر المرحلة أولاً • Select stage first'}
-                                        </option>
-                                        {getGradeOptions().map(option => (
-                                            <option key={option.value} value={option.value}>
-                                                {option.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <AnimatePresence>
-                                        {errors.gradeLevel && (
-                                            <motion.p
-                                                initial={{ opacity: 0, y: -10, height: 0 }}
-                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                                exit={{ opacity: 0, y: -10, height: 0 }}
-                                                className="text-red-500 text-sm mt-1 text-right"
-                                            >
-                                                {errors.gradeLevel.message}
-                                            </motion.p>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                            )}
 
-                        {/* WhatsApp Number */}
-                        <div>
-                            <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                <div className="flex w-full items-center justify-end gap-2 text-right">
-                                    {getLabelText('رقم الواتساب', 'WhatsApp Number')}
-                                    <Phone className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
-                                </div>
-                            </label>
-                            <input
-                                type="tel"
-                                {...register('whatsappNumber', {
-                                    required: 'رقم الواتساب مطلوب • WhatsApp number is required',
-                                    pattern: {
-                                        value: /^01[0-2,5]{1}[0-9]{8}$/,
-                                        message: 'يرجى إدخال رقم موبايل صحيح (11 رقم يبدأ بـ 01) • Please enter a valid mobile number (11 digits starting with 01)',
-                                    },
-                                })}
-                                className={`input-field text-right ${errors.whatsappNumber ? 'border-red-500' : ''}`}
-                                placeholder="01012345678"
-                            />
-                            <AnimatePresence>
-                                {errors.whatsappNumber && (
-                                    <motion.p
-                                        initial={{ opacity: 0, y: -10, height: 0 }}
-                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                        exit={{ opacity: 0, y: -10, height: 0 }}
-                                        className="text-red-500 text-sm mt-1 text-right"
-                                    >
-                                        {errors.whatsappNumber.message}
-                                    </motion.p>
-                                )}
-                            </AnimatePresence>
-                        </div>
 
                         {/* Guardian Details Section - Conditional */}
                         {isGuardianRequired && (
@@ -599,40 +477,6 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                                         Guardian Information
                                     </p>
                                     <div className="w-16 h-1 bg-gradient-to-r from-islamic-emerald to-islamic-gold mx-auto rounded-full mt-2" />
-                                </div>
-
-                                {/* Guardian Full Name */}
-                                <div>
-                                    <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                        <div className="flex w-full items-center justify-end gap-2 text-right">
-                                            {getLabelText('اسم ولي الأمر بالكامل', 'Guardian Full Name')}
-                                            <Users className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
-                                        </div>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        {...register('guardianName', {
-                                            required: isGuardianRequired ? 'اسم ولي الأمر مطلوب • Guardian name is required' : false,
-                                            minLength: {
-                                                value: 3,
-                                                message: 'يجب أن يكون الاسم 3 أحرف على الأقل • Name must be at least 3 characters',
-                                            },
-                                        })}
-                                        className={`input-field text-right ${errors.guardianName ? 'border-red-500' : ''}`}
-                                        placeholder="أدخل اسم ولي الأمر • Enter guardian name"
-                                    />
-                                    <AnimatePresence>
-                                        {errors.guardianName && (
-                                            <motion.p
-                                                initial={{ opacity: 0, y: -10, height: 0 }}
-                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                                exit={{ opacity: 0, y: -10, height: 0 }}
-                                                className="text-red-500 text-sm mt-1 text-right"
-                                            >
-                                                {errors.guardianName.message}
-                                            </motion.p>
-                                        )}
-                                    </AnimatePresence>
                                 </div>
 
                                 {/* Guardian National ID */}
@@ -665,74 +509,6 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                                                 className="text-red-500 text-sm mt-1 text-right"
                                             >
                                                 {errors.guardianNationalId.message}
-                                            </motion.p>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-
-                                {/* Guardian Occupation */}
-                                <div>
-                                    <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                        <div className="flex w-full items-center justify-end gap-2 text-right">
-                                            {getLabelText('الوظيفة / العمل', 'Occupation / Work')}
-                                            <Briefcase className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
-                                        </div>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        {...register('guardianOccupation', {
-                                            required: isGuardianRequired ? 'الوظيفة مطلوبة • Occupation is required' : false,
-                                            minLength: {
-                                                value: 2,
-                                                message: 'يجب أن يكون النص حرفين على الأقل • Must be at least 2 characters',
-                                            },
-                                        })}
-                                        className={`input-field text-right ${errors.guardianOccupation ? 'border-red-500' : ''}`}
-                                        placeholder="أدخل الوظيفة • Enter occupation"
-                                    />
-                                    <AnimatePresence>
-                                        {errors.guardianOccupation && (
-                                            <motion.p
-                                                initial={{ opacity: 0, y: -10, height: 0 }}
-                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                                exit={{ opacity: 0, y: -10, height: 0 }}
-                                                className="text-red-500 text-sm mt-1 text-right"
-                                            >
-                                                {errors.guardianOccupation.message}
-                                            </motion.p>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-
-                                {/* Guardian Address */}
-                                <div>
-                                    <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                        <div className="flex w-full items-center justify-end gap-2 text-right">
-                                            {getLabelText('عنوان ومحل الإقامة (تفصيلي)', 'Detailed Residential Address')}
-                                            <MapPin className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
-                                        </div>
-                                    </label>
-                                    <textarea
-                                        {...register('guardianAddress', {
-                                            required: isGuardianRequired ? 'العنوان مطلوب • Address is required' : false,
-                                            minLength: {
-                                                value: 10,
-                                                message: 'يجب أن يكون العنوان 10 أحرف على الأقل • Address must be at least 10 characters',
-                                            },
-                                        })}
-                                        rows={3}
-                                        className={`input-field text-right ${errors.guardianAddress ? 'border-red-500' : ''}`}
-                                        placeholder="أدخل العنوان التفصيلي • Enter detailed address"
-                                    />
-                                    <AnimatePresence>
-                                        {errors.guardianAddress && (
-                                            <motion.p
-                                                initial={{ opacity: 0, y: -10, height: 0 }}
-                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                                exit={{ opacity: 0, y: -10, height: 0 }}
-                                                className="text-red-500 text-sm mt-1 text-right"
-                                            >
-                                                {errors.guardianAddress.message}
                                             </motion.p>
                                         )}
                                     </AnimatePresence>
