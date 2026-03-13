@@ -35,7 +35,7 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
     const [submitState, setSubmitState] = useState<SubmitState>('idle')
     const [errorMessage, setErrorMessage] = useState('')
     const [maxBirthDate, setMaxBirthDate] = useState<Date | undefined>(undefined)
-    const sheetsEndpoint = 'https://script.google.com/macros/s/AKfycbzM9hxOSDgJa6gurNOf3CuR23eC3ZzlcPrTuEnbzNinCoRFGufiU8MfDT4LxTU0CXCa/exec'
+    const sheetsEndpoint = 'https://script.google.com/macros/s/AKfycbzvwG7vmHQxiEyoBJiyxI6zM6Ok3yujpo2kJAidN2hPTVqIKasLo8-i4470FFXCe9Z_/exec'
 
     useEffect(() => {
         setMaxBirthDate(new Date())
@@ -357,7 +357,7 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                             />
                             <AnimatePresence>
                                 {errors.currentMemorization && (
-                                    <motion.p 
+                                    <motion.p
                                         initial={{ opacity: 0, y: -10, height: 0 }}
                                         animate={{ opacity: 1, y: 0, height: 'auto' }}
                                         exit={{ opacity: 0, y: -10, height: 0 }}
@@ -395,7 +395,7 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                             />
                             <AnimatePresence>
                                 {errors.age && (
-                                    <motion.p 
+                                    <motion.p
                                         initial={{ opacity: 0, y: -10, height: 0 }}
                                         animate={{ opacity: 1, y: 0, height: 'auto' }}
                                         exit={{ opacity: 0, y: -10, height: 0 }}
@@ -454,7 +454,7 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
 
                             <AnimatePresence>
                                 {errors.educationType && (
-                                    <motion.p 
+                                    <motion.p
                                         initial={{ opacity: 0, y: -10, height: 0 }}
                                         animate={{ opacity: 1, y: 0, height: 'auto' }}
                                         exit={{ opacity: 0, y: -10, height: 0 }}
@@ -489,7 +489,7 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                             </select>
                             <AnimatePresence>
                                 {errors.educationStage && (
-                                    <motion.p 
+                                    <motion.p
                                         initial={{ opacity: 0, y: -10, height: 0 }}
                                         animate={{ opacity: 1, y: 0, height: 'auto' }}
                                         exit={{ opacity: 0, y: -10, height: 0 }}
@@ -535,24 +535,24 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                                         ))}
                                     </select>
                                     <AnimatePresence>
-                                {errors.gradeLevel && (
-                                    <motion.p 
-                                        initial={{ opacity: 0, y: -10, height: 0 }}
-                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                        exit={{ opacity: 0, y: -10, height: 0 }}
-                                        className="text-red-500 text-sm mt-1 text-right"
-                                    >
-                                        {errors.gradeLevel.message}
-                                    </motion.p>
-                                )}
-                            </AnimatePresence>
+                                        {errors.gradeLevel && (
+                                            <motion.p
+                                                initial={{ opacity: 0, y: -10, height: 0 }}
+                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                                exit={{ opacity: 0, y: -10, height: 0 }}
+                                                className="text-red-500 text-sm mt-1 text-right"
+                                            >
+                                                {errors.gradeLevel.message}
+                                            </motion.p>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             )}
 
                         {/* WhatsApp Number */}
                         <div>
                             <label className="block text-right mb-2 font-semibold text-gray-700 font-arabic">
-                                    <div className="flex w-full items-center justify-end gap-2 text-right">
+                                <div className="flex w-full items-center justify-end gap-2 text-right">
                                     {getLabelText('رقم الواتساب', 'WhatsApp Number')}
                                     <Phone className={`w-5 h-5 text-islamic-emerald ${variant === 'v3' ? '!text-[#064e3b]' : ''}`} />
                                 </div>
@@ -571,7 +571,7 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                             />
                             <AnimatePresence>
                                 {errors.whatsappNumber && (
-                                    <motion.p 
+                                    <motion.p
                                         initial={{ opacity: 0, y: -10, height: 0 }}
                                         animate={{ opacity: 1, y: 0, height: 'auto' }}
                                         exit={{ opacity: 0, y: -10, height: 0 }}
@@ -622,17 +622,17 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                                         placeholder="أدخل اسم ولي الأمر • Enter guardian name"
                                     />
                                     <AnimatePresence>
-                                {errors.guardianName && (
-                                    <motion.p 
-                                        initial={{ opacity: 0, y: -10, height: 0 }}
-                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                        exit={{ opacity: 0, y: -10, height: 0 }}
-                                        className="text-red-500 text-sm mt-1 text-right"
-                                    >
-                                        {errors.guardianName.message}
-                                    </motion.p>
-                                )}
-                            </AnimatePresence>
+                                        {errors.guardianName && (
+                                            <motion.p
+                                                initial={{ opacity: 0, y: -10, height: 0 }}
+                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                                exit={{ opacity: 0, y: -10, height: 0 }}
+                                                className="text-red-500 text-sm mt-1 text-right"
+                                            >
+                                                {errors.guardianName.message}
+                                            </motion.p>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
 
                                 {/* Guardian National ID */}
@@ -657,17 +657,17 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                                         maxLength={14}
                                     />
                                     <AnimatePresence>
-                                {errors.guardianNationalId && (
-                                    <motion.p 
-                                        initial={{ opacity: 0, y: -10, height: 0 }}
-                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                        exit={{ opacity: 0, y: -10, height: 0 }}
-                                        className="text-red-500 text-sm mt-1 text-right"
-                                    >
-                                        {errors.guardianNationalId.message}
-                                    </motion.p>
-                                )}
-                            </AnimatePresence>
+                                        {errors.guardianNationalId && (
+                                            <motion.p
+                                                initial={{ opacity: 0, y: -10, height: 0 }}
+                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                                exit={{ opacity: 0, y: -10, height: 0 }}
+                                                className="text-red-500 text-sm mt-1 text-right"
+                                            >
+                                                {errors.guardianNationalId.message}
+                                            </motion.p>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
 
                                 {/* Guardian Occupation */}
@@ -691,17 +691,17 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                                         placeholder="أدخل الوظيفة • Enter occupation"
                                     />
                                     <AnimatePresence>
-                                {errors.guardianOccupation && (
-                                    <motion.p 
-                                        initial={{ opacity: 0, y: -10, height: 0 }}
-                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                        exit={{ opacity: 0, y: -10, height: 0 }}
-                                        className="text-red-500 text-sm mt-1 text-right"
-                                    >
-                                        {errors.guardianOccupation.message}
-                                    </motion.p>
-                                )}
-                            </AnimatePresence>
+                                        {errors.guardianOccupation && (
+                                            <motion.p
+                                                initial={{ opacity: 0, y: -10, height: 0 }}
+                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                                exit={{ opacity: 0, y: -10, height: 0 }}
+                                                className="text-red-500 text-sm mt-1 text-right"
+                                            >
+                                                {errors.guardianOccupation.message}
+                                            </motion.p>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
 
                                 {/* Guardian Address */}
@@ -725,17 +725,17 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                                         placeholder="أدخل العنوان التفصيلي • Enter detailed address"
                                     />
                                     <AnimatePresence>
-                                {errors.guardianAddress && (
-                                    <motion.p 
-                                        initial={{ opacity: 0, y: -10, height: 0 }}
-                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                        exit={{ opacity: 0, y: -10, height: 0 }}
-                                        className="text-red-500 text-sm mt-1 text-right"
-                                    >
-                                        {errors.guardianAddress.message}
-                                    </motion.p>
-                                )}
-                            </AnimatePresence>
+                                        {errors.guardianAddress && (
+                                            <motion.p
+                                                initial={{ opacity: 0, y: -10, height: 0 }}
+                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                                exit={{ opacity: 0, y: -10, height: 0 }}
+                                                className="text-red-500 text-sm mt-1 text-right"
+                                            >
+                                                {errors.guardianAddress.message}
+                                            </motion.p>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
 
                                 {/* Guardian WhatsApp Number */}
@@ -759,17 +759,17 @@ export default function RegistrationForm({ variant = 'v1' }: RegistrationFormPro
                                         placeholder="01012345678"
                                     />
                                     <AnimatePresence>
-                                {errors.guardianWhatsappNumber && (
-                                    <motion.p 
-                                        initial={{ opacity: 0, y: -10, height: 0 }}
-                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                        exit={{ opacity: 0, y: -10, height: 0 }}
-                                        className="text-red-500 text-sm mt-1 text-right"
-                                    >
-                                        {errors.guardianWhatsappNumber.message}
-                                    </motion.p>
-                                )}
-                            </AnimatePresence>
+                                        {errors.guardianWhatsappNumber && (
+                                            <motion.p
+                                                initial={{ opacity: 0, y: -10, height: 0 }}
+                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                                exit={{ opacity: 0, y: -10, height: 0 }}
+                                                className="text-red-500 text-sm mt-1 text-right"
+                                            >
+                                                {errors.guardianWhatsappNumber.message}
+                                            </motion.p>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             </motion.div>
                         )}
